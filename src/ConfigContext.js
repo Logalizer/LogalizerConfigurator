@@ -28,7 +28,18 @@ function ConfigReducer(Config, action) {
   switch (action.type) {
     case "changed_backup_file": {
       Config.backup_file = action.value;
-      console.log(Config);
+      return;
+    }
+    case "changed_translation_file": {
+      Config.translation_file = action.value;
+      return;
+    }
+    case "changed_execute": {
+      Config.execute = action.value.split(/\r?\n|\r|\n/g);
+      return;
+    }
+    case "changed_auto_new_line": {
+      Config.auto_new_line = action.value;
       return;
     }
     default: {
@@ -46,4 +57,5 @@ const initialConfig = {
   ],
   translation_file:
     "${fileDirname}/generated_${fileBasenameNoExtension}/${fileBasename}.txt",
+  auto_new_line: true,
 };

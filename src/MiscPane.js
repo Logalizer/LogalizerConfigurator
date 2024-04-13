@@ -6,13 +6,14 @@ import { useConfig, useConfigDispatch } from "./ConfigContext.js";
 
 function BackupFile() {
   const dispatch = useConfigDispatch();
+  const config = useConfig();
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="standard">
       <TextField
         fullWidth
         id="backup_file"
         label="Backup File Path"
-        defaultValue="${fileDirname}/generated_${fileBasenameNoExtension}/${fileBasename}.original"
+        value={config.backup_file}
         onChange={(e) => {
           dispatch({
             type: "changed_backup_file",
@@ -25,19 +26,29 @@ function BackupFile() {
 }
 
 function TranslationFile() {
+  const dispatch = useConfigDispatch();
+  const config = useConfig();
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="standard">
       <TextField
         fullWidth
-        id="backup_file"
+        id="translation_file"
         label="Translation File Path"
-        defaultValue="${fileDirname}/generated_${fileBasenameNoExtension}/${fileBasename}.txt"
+        value={config.translation_file}
+        onChange={(e) => {
+          dispatch({
+            type: "changed_translation_file",
+            value: e.target.value,
+          });
+        }}
       />
     </FormControl>
   );
 }
 
 function Execute() {
+  const dispatch = useConfigDispatch();
+  const config = useConfig();
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="standard">
       <TextField
@@ -47,7 +58,13 @@ function Execute() {
         multiline
         maxRows={4}
         rows={4}
-        defaultValue='java -DPLANTUML_LIMIT_SIZE=32768 -jar ${exeDirname}/plantuml/plantuml.jar -tpng \" ${fileDirname} /generated_${fileBasenameNoExtension}/${fileBasename}.txt\"'
+        value={config.execute}
+        onChange={(e) => {
+          dispatch({
+            type: "changed_execute",
+            value: e.target.value,
+          });
+        }}
       />
     </FormControl>
   );
@@ -86,10 +103,23 @@ function WrapTextPost() {
 }
 
 function AutoNewLine() {
+  const dispatch = useConfigDispatch();
+  const config = useConfig();
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="standard">
       <FormControlLabel
-        control={<Switch defaultChecked />}
+        control={
+          <Switch
+            inputProps={{ "aria-label": "controlled" }}
+            checked={config.auto_new_line}
+            onChange={(e, flag) => {
+              dispatch({
+                type: "changed_auto_new_line",
+                value: flag,
+              });
+            }}
+          />
+        }
         label="Add New Lines after Translation"
       />
     </FormControl>
