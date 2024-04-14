@@ -42,6 +42,20 @@ function ConfigReducer(Config, action) {
       Config.auto_new_line = action.value;
       return;
     }
+    case "added_blacklist": {
+      Config.blacklist.push(action.value);
+      return;
+    }
+    case "edited_blacklist": {
+      // Config.blacklist.push(action.value);
+      Config.blacklist[action.index] = action.value;
+      return;
+    }
+    case "deleted_blacklist": {
+      // Config.blacklist.push(action.value);
+      Config.blacklist.splice(action.index, 1);
+      return;
+    }
     default: {
       throw Error("Unknown action: " + action.type);
     }
@@ -57,5 +71,6 @@ const initialConfig = {
   ],
   translation_file:
     "${fileDirname}/generated_${fileBasenameNoExtension}/${fileBasename}.txt",
+  blacklist: ["check1", "check2"],
   auto_new_line: true,
 };

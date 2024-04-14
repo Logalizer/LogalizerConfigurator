@@ -21,7 +21,6 @@
 
 ## Events
 
-
 ## UI
 
 - Paths
@@ -41,7 +40,6 @@
   - auto
 - Json
   - onJsonUpdate
-
 
 ## Fields
 
@@ -105,19 +103,22 @@ React Material > webpack
     - [x] <https://medium.com/@ns-tech-learn/how-to-install-webpack-and-configure-in-react-js-88b4b0bd0af9>
     - [x] <https://www.youtube.com/watch?v=F0ep7CTn5K8>
 - [x] Explore more on the UI components available from Material
-- [ ] Take screenshots of components and design the wireframe
-- [ ] Implement the wireframe in the project
-- [ ] Check yarn build once more for any braking changes
-- [ ] Write logic to show the json contents for basic input fields
-  - [ ] Read react
-    - [ ] Props are immutable, so you need states as global
-    - [ ] Keys are important for data
-    - [ ] When state gets updated, the components are re-rendered
-    - [ ] dataStore state at the app level
-    - [ ] treat any JavaScript object that you put into state as read-only.
-    - [ ] Passing data deeply with context
+- [x] Take screenshots of components and design the wireframe
+- [x] Implement the wireframe in the project
+- [x] Check yarn build once more for any braking changes
+- [x] Write logic to show the json contents for basic input fields
+  - [x] Read react
+    - [x] Props are immutable, so you need states as global
+    - [x] Keys are important for data
+    - [x] When state gets updated, the components are re-rendered
+    - [x] dataStore state at the app level
+    - [x] treat any JavaScript object that you put into state as read-only.
+    - [x] Passing data deeply with context
   - [ ] When json is updated update all the fields
   - [ ] Have a global class to manage data store
   - [ ] When a field changes directly update the data store
   - [ ] Update JSON when the data store gets updated
 - [ ] Continue further only if json contents are capturable
+- [ ] Copy add delete from todo list app in examples
+- [ ] Find best way to add help in each section
+- [ ] Electron app
