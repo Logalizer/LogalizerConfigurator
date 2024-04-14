@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer } from "react";
 import { useImmerReducer } from "use-immer";
 const ConfigContext = createContext(null);
-
+import { nanoid } from "nanoid";
 const ConfigDispatchContext = createContext(null);
 
 export function ConfigProvider({ children }) {
@@ -72,6 +72,7 @@ function ConfigReducer(Config, action) {
         Config.auto_new_line =
           json.auto_new_line ?? initialConfig.auto_new_line;
         Config.blacklist = json.blacklist ?? initialConfig.blacklist;
+        Config.hash = nanoid();
         Config = structuredClone(json);
       } catch (error) {
         alert(error);

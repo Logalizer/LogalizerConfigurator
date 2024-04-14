@@ -37,6 +37,7 @@ export default function JsonPane() {
           variant="filled"
           color="success"
           focused
+          key={config.hash}
           defaultValue={JSON.stringify(config, null, 2)}
         />
       </FormControl>
