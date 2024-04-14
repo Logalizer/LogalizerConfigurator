@@ -2,22 +2,23 @@
 
 ## UI
 
-- Paths
-  - backup_file
-  - translation_file
-  - execute
-- File Manipulation
-  - replace_words
-  - delete_lines
-- Filters
-  - disable_group
-  - blacklist
 - Translations
-  - translations
-  - pair
-  - wrap
-  - auto
-- Json
+  - [ ] translations
+- More
+  - [ ] pair
+  - [x] wrap
+  - [x] auto
+- Filters
+  - [x] disable_group
+  - [x] blacklist
+- File Modifiers
+  - backup_file
+  - replace_words
+  - [x] delete_lines
+- Paths
+  - [x] translation_file
+  - [x] execute
+- [x] Json
 
 ## Events
 
@@ -119,8 +120,8 @@ React Material > webpack
   - [ ] When a field changes directly update the data store
   - [ ] Update JSON when the data store gets updated
 - [x] Continue further only if json contents are capturable
-  - [ ] Need to do manual deep copy
-  - [ ] Need to introduce "Apply" button., Apply to change and show parse errors
+  - [x] Need to do manual deep copy
+  - [x] Need to introduce "Apply" button., Apply to change and show parse errors
 - [x] Copy add delete from todo list app in examples
 - [ ] Find best way to add help in each section
 - [ ] Electron app

@@ -15,50 +15,39 @@ import Box from "@mui/material/Box";
 
 import { useState } from "react";
 import ArrayProvider from "./ArrayProvider";
-import { useConfig } from "./ConfigContext.js";
-function Execute() {
+import { useConfig, useConfigDispatch } from "./ConfigContext.js";
+
+function BackupFile() {
+  const dispatch = useConfigDispatch();
+  const config = useConfig();
   return (
-    <Box sx={{}}>
-      <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-        <OutlinedInput fullWidth placeholder="Blacklist" />
-      </FormControl>
-
-      <Box sx={{ flexWrap: "wrap", p: 2, border: "1px solid grey" }}>
-        <Grid container spacing={12}>
-          <Grid xs={1}>Blacklist</Grid>
-          <Grid xs={1}>
-            <IconButton aria-label="delete">
-              <AddIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-
-        <List>
-          <ListItem disablePadding>
-            <OutlinedInput sx={{ m: 1 }} fullWidth placeholder="Blacklist" />
-            <IconButton aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <OutlinedInput sx={{ m: 1 }} fullWidth placeholder="Blacklist" />
-            <IconButton aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
-          </ListItem>
-        </List>
-      </Box>
-    </Box>
+    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+      <TextField
+        fullWidth
+        id="backup_file"
+        label="Backup File Path"
+        value={config.backup_file}
+        onChange={(e) => {
+          dispatch({
+            type: "changed_backup_file",
+            value: e.target.value,
+          });
+        }}
+      />
+    </FormControl>
   );
 }
 
 export default function FileModifierPane() {
   const config = useConfig();
   return (
-    <ArrayProvider
-      ItemName="Blacklist"
-      Data={config.blacklist}
-      ActionPostfix="blacklist"
-    />
+    <>
+      <ArrayProvider
+        ItemName="Delete Lines"
+        Data={config.delete_lines}
+        ActionPostfix="delete_lines"
+      />
+      <BackupFile />
+    </>
   );
 }

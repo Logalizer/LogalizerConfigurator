@@ -7,10 +7,12 @@ import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 
-import MiscPane from "./MiscPane";
 import TranslationsPane from "./TranslationsPane";
 import FileModifierPane from "./FileModifierPane";
 import JsonPane from "./JsonPane";
+import MoreTranslationsPane from "./MoreTranslationsPane";
+import FiltersPane from "./FiltersPane";
+import PathsPane from "./PathsPane";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,21 +63,29 @@ export default function TabBar() {
           aria-label="basic tabs example"
         >
           <Tab label="Translations" {...a11yProps(0)} />
-          <Tab label="Misc" {...a11yProps(1)} />
-          <Tab label="File Manipulators" {...a11yProps(2)} />
-          <Tab label="JSON" {...a11yProps(2)} />
+          <Tab label="More" {...a11yProps(1)} />
+          <Tab label="Filters" {...a11yProps(2)} />
+          <Tab label="File Modifiers" {...a11yProps(3)} />
+          <Tab label="Paths" {...a11yProps(4)} />
+          <Tab label="JSON" {...a11yProps(5)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
         <TranslationsPane />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <MiscPane />
+        <MoreTranslationsPane />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <FileModifierPane />
+        <FiltersPane />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
+        <FileModifierPane />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
+        <PathsPane />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={5}>
         <JsonPane />
       </CustomTabPanel>
     </Box>

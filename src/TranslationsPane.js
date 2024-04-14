@@ -7,11 +7,5 @@ import { useConfig } from "./ConfigContext.js";
 
 export default function TranslationsPane() {
   const config = useConfig();
-  return (
-    <ArrayProvider
-      ItemName="Blacklist"
-      Data={config.blacklist}
-      ActionPostfix="blacklist"
-    />
-  );
+  return <></>;
 }

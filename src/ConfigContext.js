@@ -62,16 +62,73 @@ function ConfigReducer(Config, action) {
       Config.execute.splice(action.index, 1);
       return;
     }
+    case "added_delete_lines": {
+      Config.delete_lines.push(action.value);
+      return;
+    }
+    case "edited_delete_lines": {
+      Config.delete_lines[action.index] = action.value;
+      return;
+    }
+    case "deleted_delete_lines": {
+      Config.delete_lines.splice(action.index, 1);
+      return;
+    }
+    case "added_disable_group": {
+      Config.disable_group.push(action.value);
+      return;
+    }
+    case "edited_disable_group": {
+      Config.disable_group[action.index] = action.value;
+      return;
+    }
+    case "deleted_disable_group": {
+      Config.disable_group.splice(action.index, 1);
+      return;
+    }
+    case "added_wrap_text_pre": {
+      Config.wrap_text_pre.push(action.value);
+      return;
+    }
+    case "edited_wrap_text_pre": {
+      Config.wrap_text_pre[action.index] = action.value;
+      return;
+    }
+    case "deleted_wrap_text_pre": {
+      Config.wrap_text_pre.splice(action.index, 1);
+      return;
+    }
+    case "added_wrap_text_post": {
+      Config.wrap_text_post.push(action.value);
+      return;
+    }
+    case "edited_wrap_text_post": {
+      Config.wrap_text_post[action.index] = action.value;
+      return;
+    }
+    case "deleted_wrap_text_post": {
+      Config.wrap_text_post.splice(action.index, 1);
+      return;
+    }
+
     case "edited_json_config": {
       try {
         console.log(action.json);
         let json = JSON.parse(action.json);
-        Config.backup_file = json.backup_file ?? initialConfig.backup_file;
         Config.translation_file =
           json.translation_file ?? initialConfig.translation_file;
+        Config.execute = json.execute ?? initialConfig.execute;
         Config.auto_new_line =
           json.auto_new_line ?? initialConfig.auto_new_line;
         Config.blacklist = json.blacklist ?? initialConfig.blacklist;
+        Config.disable_group =
+          json.disable_group ?? initialConfig.disable_group;
+        Config.delete_lines = json.delete_lines ?? initialConfig.delete_lines;
+        Config.backup_file = json.backup_file ?? initialConfig.backup_file;
+        Config.wrap_text_pre =
+          json.wrap_text_pre ?? initialConfig.wrap_text_pre;
+        Config.wrap_text_post =
+          json.wrap_text_post ?? initialConfig.wrap_text_post;
         Config.hash = nanoid();
         Config = structuredClone(json);
       } catch (error) {
@@ -95,5 +152,9 @@ const initialConfig = {
   translation_file:
     "${fileDirname}/generated_${fileBasenameNoExtension}/${fileBasename}.txt",
   blacklist: ["check1", "check2"],
+  disable_group: [],
+  delete_lines: [],
   auto_new_line: true,
+  wrap_text_pre: ["@startuml"],
+  wrap_text_post: ["@enduml"],
 };
