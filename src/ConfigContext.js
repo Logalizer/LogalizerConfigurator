@@ -34,10 +34,6 @@ function ConfigReducer(Config, action) {
       Config.translation_file = action.value;
       return;
     }
-    case "changed_execute": {
-      Config.execute = action.value.split(/\r?\n|\r|\n/g);
-      return;
-    }
     case "changed_auto_new_line": {
       Config.auto_new_line = action.value;
       return;
@@ -67,7 +63,19 @@ function ConfigReducer(Config, action) {
       return;
     }
     case "edited_json_config": {
-      Config = action.json;
+      try {
+        console.log(action.json);
+        let json = JSON.parse(action.json);
+        Config.backup_file = json.backup_file ?? initialConfig.backup_file;
+        Config.translation_file =
+          json.translation_file ?? initialConfig.translation_file;
+        Config.auto_new_line =
+          json.auto_new_line ?? initialConfig.auto_new_line;
+        Config.blacklist = json.blacklist ?? initialConfig.blacklist;
+        Config = structuredClone(json);
+      } catch (error) {
+        alert(error);
+      }
       return;
     }
     default: {

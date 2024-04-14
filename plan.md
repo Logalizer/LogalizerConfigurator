@@ -118,7 +118,9 @@ React Material > webpack
   - [ ] Have a global class to manage data store
   - [ ] When a field changes directly update the data store
   - [ ] Update JSON when the data store gets updated
-- [ ] Continue further only if json contents are capturable
+- [x] Continue further only if json contents are capturable
+  - [ ] Need to do manual deep copy
+  - [ ] Need to introduce "Apply" button., Apply to change and show parse errors
 - [x] Copy add delete from todo list app in examples
 - [ ] Find best way to add help in each section
 - [ ] Electron app
