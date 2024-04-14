@@ -47,12 +47,10 @@ function ConfigReducer(Config, action) {
       return;
     }
     case "edited_blacklist": {
-      // Config.blacklist.push(action.value);
       Config.blacklist[action.index] = action.value;
       return;
     }
     case "deleted_blacklist": {
-      // Config.blacklist.push(action.value);
       Config.blacklist.splice(action.index, 1);
       return;
     }
