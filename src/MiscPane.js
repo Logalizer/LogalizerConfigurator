@@ -3,6 +3,7 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
+import ArrayProvider from "./ArrayProvider.js";
 
 function BackupFile() {
   const dispatch = useConfigDispatch();
@@ -47,26 +48,14 @@ function TranslationFile() {
 }
 
 function Execute() {
-  const dispatch = useConfigDispatch();
   const config = useConfig();
+
   return (
-    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-      <TextField
-        fullWidth
-        id="outlined-multiline-flexible"
-        label="Execute"
-        multiline
-        maxRows={4}
-        rows={4}
-        value={config.execute}
-        onChange={(e) => {
-          dispatch({
-            type: "changed_execute",
-            value: e.target.value,
-          });
-        }}
-      />
-    </FormControl>
+    <ArrayProvider
+      ItemName="Blacklist"
+      Data={config.execute}
+      ActionPostfix="execute"
+    />
   );
 }
 

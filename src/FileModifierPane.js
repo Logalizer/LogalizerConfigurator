@@ -13,6 +13,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 
+import { useState } from "react";
+import ArrayProvider from "./ArrayProvider";
+import { useConfig } from "./ConfigContext.js";
 function Execute() {
   return (
     <Box sx={{}}>
@@ -50,9 +53,12 @@ function Execute() {
 }
 
 export default function FileModifierPane() {
+  const config = useConfig();
   return (
-    <div>
-      <Execute />
-    </div>
+    <ArrayProvider
+      ItemName="Blacklist"
+      Data={config.blacklist}
+      ActionPostfix="blacklist"
+    />
   );
 }

@@ -54,6 +54,22 @@ function ConfigReducer(Config, action) {
       Config.blacklist.splice(action.index, 1);
       return;
     }
+    case "added_execute": {
+      Config.execute.push(action.value);
+      return;
+    }
+    case "edited_execute": {
+      Config.execute[action.index] = action.value;
+      return;
+    }
+    case "deleted_execute": {
+      Config.execute.splice(action.index, 1);
+      return;
+    }
+    case "edited_json_config": {
+      Config = action.json;
+      return;
+    }
     default: {
       throw Error("Unknown action: " + action.type);
     }

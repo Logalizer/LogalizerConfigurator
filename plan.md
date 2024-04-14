@@ -119,6 +119,6 @@ React Material > webpack
   - [ ] When a field changes directly update the data store
   - [ ] Update JSON when the data store gets updated
 - [ ] Continue further only if json contents are capturable
-- [ ] Copy add delete from todo list app in examples
+- [x] Copy add delete from todo list app in examples
 - [ ] Find best way to add help in each section
 - [ ] Electron app

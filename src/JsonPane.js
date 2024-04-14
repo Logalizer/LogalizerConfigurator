@@ -13,11 +13,23 @@ export default function JsonPane() {
         <TextField
           fullWidth
           id="outlined-multiline-flexible"
-          label="json"
+          label=""
           multiline
           rows={20}
-          defaultValue="{}"
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="filled"
+          color="success"
+          focused
           value={JSON.stringify(config, null, 2)}
+          onChange={(e) => {
+            console.log(e.target.value);
+            dispatch({
+              type: "edited_json_config",
+              config: JSON.parse(e.target.value),
+            });
+          }}
         />
       </FormControl>
     </div>
