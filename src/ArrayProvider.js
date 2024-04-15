@@ -72,40 +72,53 @@ function Item({ Index, Text, EditAction, DeleteAction }) {
   );
 }
 
-export default function ArrayProvider({ ItemName, Data, ActionPostfix }) {
+export default function ArrayProvider({
+  ItemName,
+  Data,
+  ActionPostfix,
+  AddAction = null,
+  EditAction = null,
+  DeleteAction = null,
+}) {
   const add_type = "added_" + ActionPostfix;
   const edit_type = "edited_" + ActionPostfix;
   const delete_type = "deleted_" + ActionPostfix;
-  const adder = (text) => {
-    return {
-      type: add_type,
-      value: text,
+  if (AddAction === null) {
+    AddAction = (text) => {
+      return {
+        type: add_type,
+        value: text,
+      };
     };
-  };
-  const editor = (Index, text) => {
-    return {
-      type: edit_type,
-      value: text,
-      index: Index,
+  }
+  if (EditAction === null) {
+    EditAction = (Index, text) => {
+      return {
+        type: edit_type,
+        value: text,
+        index: Index,
+      };
     };
-  };
-  const deletor = (Index) => {
-    return {
-      type: delete_type,
-      index: Index,
+  }
+  if (DeleteAction === null) {
+    DeleteAction = (Index) => {
+      return {
+        type: delete_type,
+        index: Index,
+      };
     };
-  };
+  }
   return (
     <>
-      <AddItem ItemName={ItemName} AddAction={adder} />
+      <AddItem ItemName={ItemName} AddAction={AddAction} />
       <ul>
         {Data.map((text, i) => (
           <li key={i}>
             <Item
               Index={i}
               Text={text}
-              EditAction={editor}
-              DeleteAction={deletor}
+              EditAction={EditAction}
+              DeleteAction={DeleteAction}
             />
           </li>
         ))}
