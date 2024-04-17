@@ -5,7 +5,19 @@ import { useState } from "react";
 import { useConfigDispatch } from "./ConfigContext.js";
 import React from "react";
 import { Stack } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import AddIcon from "@mui/icons-material/Add";
 
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 function AddItem({ ItemName, AddAction }) {
   const [text1, setText1] = useState("");
   const [text2, setText2] = useState("");
@@ -13,25 +25,34 @@ function AddItem({ ItemName, AddAction }) {
   const placeholder = "Add " + ItemName;
   return (
     <>
-      <input
-        placeholder={placeholder}
-        value={text1}
-        onChange={(e) => setText1(e.target.value)}
-      />
-      <input
-        placeholder={placeholder}
-        value={text2}
-        onChange={(e) => setText2(e.target.value)}
-      />
-      <button
-        onClick={() => {
-          dispatch(AddAction(text1, text2));
-          setText1("");
-          setText2("");
-        }}
-      >
-        Add
-      </button>
+      <Stack direction="row" spacing={2}>
+        <TextField
+          id="outlined-basic"
+          fullWidth
+          label={placeholder}
+          variant="outlined"
+          value={text1}
+          onChange={(e) => setText1(e.target.value)}
+        />
+        <TextField
+          id="outlined-basic"
+          fullWidth
+          label={placeholder}
+          variant="outlined"
+          value={text2}
+          onChange={(e) => setText2(e.target.value)}
+        />
+
+        <IconButton aria-label="add">
+          <AddIcon
+            onClick={() => {
+              dispatch(AddAction(text1, text2));
+              setText1("");
+              setText2("");
+            }}
+          />
+        </IconButton>
+      </Stack>
     </>
   );
 }
@@ -42,61 +63,59 @@ function Item({ Index, Text1, Text2, EditAction, DeleteAction }) {
   let ItemContent;
   const textInput1 = React.createRef();
   const textInput2 = React.createRef();
+  const editInput1 = <input defaultValue={Text1} ref={textInput1} />;
+  const editInput2 = <input defaultValue={Text2} ref={textInput2} />;
+  const saveButton = (
+    <IconButton aria-label="save">
+      <SaveIcon
+        onClick={(e) => {
+          dispatch(
+            EditAction(
+              Index,
+              textInput1.current.value,
+              textInput2.current.value
+            )
+          );
+          setIsEditing(false);
+        }}
+      />
+    </IconButton>
+  );
+  const editButton = (
+    <IconButton aria-label="edit">
+      <EditIcon onClick={() => setIsEditing(true)} />
+    </IconButton>
+  );
+  const deleteButton = (
+    <IconButton aria-label="delete">
+      <DeleteIcon
+        onClick={(e) => {
+          dispatch(DeleteAction(Index, Text1));
+        }}
+      />
+    </IconButton>
+  );
   if (isEditing) {
     ItemContent = (
       <>
-        <input defaultValue={Text1} ref={textInput1} />
-        <input defaultValue={Text2} ref={textInput2} />
-
-        <button
-          onClick={(e) => {
-            dispatch(
-              EditAction(
-                Index,
-                textInput1.current.value,
-                textInput2.current.value
-              )
-            );
-            setIsEditing(false);
-          }}
-        >
-          Save
-        </button>
+        <TableCell> {editInput1}</TableCell>
+        <TableCell>{editInput2}</TableCell>
+        <TableCell>{saveButton}</TableCell>
       </>
     );
   } else {
     ItemContent = (
       <>
-        <TextField
-          id="outlined-read-only-input"
-          label=""
-          defaultValue={Text1}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <TextField
-          id="outlined-read-only-input"
-          label=""
-          defaultValue={Text2}
-          InputProps={{
-            readOnly: true,
-          }}
-        />
-        <button onClick={() => setIsEditing(true)}>Edit</button>
+        <TableCell> {Text1}</TableCell>
+        <TableCell>{Text2}</TableCell>
+        <TableCell>{editButton}</TableCell>
       </>
     );
   }
   return (
     <>
       {ItemContent}
-      <button
-        onClick={(e) => {
-          dispatch(DeleteAction(Index, Text1));
-        }}
-      >
-        Delete
-      </button>
+      {deleteButton}
     </>
   );
 }
@@ -143,7 +162,7 @@ export default function PairArrayProvider({
   let items = [];
   Data.forEach((text, i) => {
     items.push(
-      <li key={i}>
+      <TableRow key={i}>
         <Item
           key={i + text[0] + text[1]}
           Index={i}
@@ -152,13 +171,28 @@ export default function PairArrayProvider({
           EditAction={EditAction}
           DeleteAction={DeleteAction}
         />
-      </li>
+      </TableRow>
     );
   });
   return (
     <>
       <AddItem ItemName={ItemName} AddAction={AddAction} />
-      <ul>{items}</ul>
+
+      <Stack direction="column">
+        <TableContainer component={Paper}>
+          <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+                <TableCell style={{ width: 30 }}></TableCell>
+                <TableCell style={{ width: 30 }}></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{items}</TableBody>
+          </Table>
+        </TableContainer>
+      </Stack>
     </>
   );
 }

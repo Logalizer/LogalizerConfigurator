@@ -1,8 +1,17 @@
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
+
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
+import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import { useConfigDispatch } from "./ConfigContext.js";
+import Paper from "@mui/material/Paper";
+
 import React from "react";
 
 function AddItem({ ItemName, AddAction }) {
@@ -10,22 +19,25 @@ function AddItem({ ItemName, AddAction }) {
   const dispatch = useConfigDispatch();
   const placeholder = "Add " + ItemName;
   return (
-    <>
-      <input
-        placeholder={placeholder}
+    <Stack direction="row" spacing={2}>
+      <TextField
+        id="outlined-basic"
+        fullWidth
+        label={placeholder}
+        variant="outlined"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <button
-        onClick={() => {
-          if (text.length === 0) return;
-          dispatch(AddAction(text));
-          setText("");
-        }}
-      >
-        Add
-      </button>
-    </>
+      <IconButton aria-label="add">
+        <AddIcon
+          onClick={() => {
+            if (text.length === 0) return;
+            dispatch(AddAction(text));
+            setText("");
+          }}
+        />
+      </IconButton>
+    </Stack>
   );
 }
 
@@ -35,40 +47,43 @@ function Item({ Index, Text, EditAction, DeleteAction }) {
   let ItemContent;
   let text;
   const textInput = React.createRef();
+  console.log("Drawn  ", isEditing);
   if (isEditing) {
     ItemContent = (
       <>
+        <IconButton aria-label="save">
+          <SaveIcon
+            onClick={(e) => {
+              if (textInput.current.value.length === 0) return;
+              dispatch(EditAction(Index, textInput.current.value));
+              setIsEditing(false);
+            }}
+          />
+        </IconButton>
         <input defaultValue={Text} ref={textInput} />
-        <button
-          onClick={(e) => {
-            if (textInput.current.value.length === 0) return;
-            dispatch(EditAction(Index, textInput.current.value));
-            setIsEditing(false);
-          }}
-        >
-          Save
-        </button>
       </>
     );
   } else {
     ItemContent = (
       <>
+        <IconButton aria-label="edit">
+          <EditIcon onClick={() => setIsEditing(true)} />
+        </IconButton>
         {Text}
-        <button onClick={() => setIsEditing(true)}>Edit</button>
       </>
     );
   }
   return (
-    <label>
+    <>
+      <IconButton aria-label="delete">
+        <DeleteIcon
+          onClick={(e) => {
+            dispatch(DeleteAction(Index));
+          }}
+        />
+      </IconButton>
       {ItemContent}
-      <button
-        onClick={(e) => {
-          dispatch(DeleteAction(Index));
-        }}
-      >
-        Delete
-      </button>
-    </label>
+    </>
   );
 }
 
@@ -111,18 +126,19 @@ export default function ArrayProvider({
   return (
     <>
       <AddItem ItemName={ItemName} AddAction={AddAction} />
-      <ul>
+
+      <Stack direction="column">
         {Data.map((text, i) => (
-          <li key={i}>
+          <div key={i}>
             <Item
               Index={i}
               Text={text}
               EditAction={EditAction}
               DeleteAction={DeleteAction}
             />
-          </li>
+          </div>
         ))}
-      </ul>
+      </Stack>
     </>
   );
 }

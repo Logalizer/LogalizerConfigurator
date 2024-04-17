@@ -6,14 +6,16 @@ import ArrayProvider from "./ArrayProvider";
 import Switch from "@mui/material/Switch";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
 import PairArrayProvider from "./PairArrayProvider.js";
-
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Edit } from "@mui/icons-material";
 
 function Group({ Index, Text }) {
   const dispatch = useConfigDispatch();
   return (
-    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+    <FormControl fullWidth variant="standard">
       <TextField
         fullWidth
         id="group"
@@ -33,7 +35,7 @@ function Group({ Index, Text }) {
 function Print({ Index, Text }) {
   const dispatch = useConfigDispatch();
   return (
-    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+    <FormControl fullWidth variant="standard">
       <TextField
         fullWidth
         id="print"
@@ -187,12 +189,29 @@ export default function TranslationsPane() {
   const translations = config.translations.map((tr, i) => {
     return (
       <>
-        <Group Index={i} Text={tr.group} />
-        <Print Index={i} Text={tr.print} />
-        <Patterns TrIndex={i} Data={tr.patterns} />
-        <Variables TrIndex={i} Data={tr.variables} />
-        <Enabled Index={i} Value={tr.enabled} />
-        <Duplicates Index={i} Value={tr.duplicates} />
+        <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
+          <Stack direction="column" spacing={2}>
+            <Typography variant="h5" component="h5">
+              {tr.print}
+            </Typography>
+            <Group Index={i} Text={tr.group} />
+            <Print Index={i} Text={tr.print} />
+            <Paper elevation={2} sx={{ margin: 2, p: 2 }}>
+              <Typography variant="h5" component="h5" sx={{ mb: 1 }}>
+                Patterns
+              </Typography>
+              <Patterns TrIndex={i} Data={tr.patterns} />
+            </Paper>
+            <Paper elevation={2} sx={{ margin: 2, p: 2 }}>
+              <Typography variant="h5" component="h5" sx={{ mb: 1 }}>
+                Variables
+              </Typography>
+              <Variables TrIndex={i} Data={tr.variables} />
+            </Paper>
+            <Enabled Index={i} Value={tr.enabled} />
+            <Duplicates Index={i} Value={tr.duplicates} />
+          </Stack>
+        </Paper>
       </>
     );
   });

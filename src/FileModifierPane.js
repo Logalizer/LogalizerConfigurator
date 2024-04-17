@@ -3,7 +3,6 @@ import TextField from "@mui/material/TextField";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 
@@ -13,6 +12,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Box from "@mui/material/Box";
 
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import ArrayProvider from "./ArrayProvider";
 import PairArrayProvider from "./PairArrayProvider.js";
@@ -22,7 +24,7 @@ function BackupFile() {
   const dispatch = useConfigDispatch();
   const config = useConfig();
   return (
-    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+    <FormControl fullWidth sx={{ m: 2 }} variant="standard">
       <TextField
         fullWidth
         id="backup_file"
@@ -69,12 +71,27 @@ export default function FileModifierPane() {
   const config = useConfig();
   return (
     <>
-      <ArrayProvider
-        ItemName="Delete Lines"
-        Data={config.delete_lines}
-        ActionPostfix="delete_lines"
-      />
-      <ReplaceWords Data={config.replace_words} />
+      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
+        <Stack direction="column" spacing={2}>
+          <Typography variant="h5" component="h5">
+            Delete Lines
+          </Typography>
+          <ArrayProvider
+            ItemName="Delete Lines"
+            Data={config.delete_lines}
+            ActionPostfix="delete_lines"
+          />
+        </Stack>
+      </Paper>
+
+      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
+        <Stack direction="column" spacing={2}>
+          <Typography variant="h5" component="h5">
+            Replace Words
+          </Typography>
+          <ReplaceWords Data={config.replace_words} />
+        </Stack>
+      </Paper>
       <BackupFile />
     </>
   );
