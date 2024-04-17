@@ -18,7 +18,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-function AddItem({ ItemName, AddAction }) {
+function AddItem({ ItemName, AddAction, TitlePair }) {
   const [text1, setText1] = useState("");
   const [text2, setText2] = useState("");
   const dispatch = useConfigDispatch();
@@ -29,7 +29,7 @@ function AddItem({ ItemName, AddAction }) {
         <TextField
           id="outlined-basic"
           fullWidth
-          label={placeholder}
+          label={TitlePair[0]}
           variant="outlined"
           value={text1}
           onChange={(e) => setText1(e.target.value)}
@@ -37,7 +37,7 @@ function AddItem({ ItemName, AddAction }) {
         <TextField
           id="outlined-basic"
           fullWidth
-          label={placeholder}
+          label={TitlePair[1]}
           variant="outlined"
           value={text2}
           onChange={(e) => setText2(e.target.value)}
@@ -123,6 +123,7 @@ function Item({ Index, Text1, Text2, EditAction, DeleteAction }) {
 export default function PairArrayProvider({
   ItemName,
   Data,
+  TitlePair,
   ActionPostfix,
   AddAction = null,
   EditAction = null,
@@ -176,15 +177,19 @@ export default function PairArrayProvider({
   });
   return (
     <>
-      <AddItem ItemName={ItemName} AddAction={AddAction} />
+      <AddItem
+        ItemName={ItemName}
+        AddAction={AddAction}
+        TitlePair={TitlePair}
+      />
 
       <Stack direction="column">
         <TableContainer component={Paper}>
           <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
+                <TableCell>{TitlePair[0]}</TableCell>
+                <TableCell>{TitlePair[1]}</TableCell>
                 <TableCell style={{ width: 30 }}></TableCell>
                 <TableCell style={{ width: 30 }}></TableCell>
               </TableRow>

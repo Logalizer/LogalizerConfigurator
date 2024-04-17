@@ -221,20 +221,28 @@ function ConfigReducer(Config, action) {
     case "edited_json_config": {
       try {
         let json = JSON.parse(action.json);
-        Config.translation_file =
-          json.translation_file ?? initialConfig.translation_file;
-        Config.execute = json.execute ?? initialConfig.execute;
-        Config.auto_new_line =
-          json.auto_new_line ?? initialConfig.auto_new_line;
-        Config.blacklist = json.blacklist ?? initialConfig.blacklist;
-        Config.disable_group =
-          json.disable_group ?? initialConfig.disable_group;
-        Config.delete_lines = json.delete_lines ?? initialConfig.delete_lines;
-        Config.backup_file = json.backup_file ?? initialConfig.backup_file;
+        // Translations
+        Config.translations = json.translations ?? initialConfig.translations;
+        // More
         Config.wrap_text_pre =
           json.wrap_text_pre ?? initialConfig.wrap_text_pre;
         Config.wrap_text_post =
           json.wrap_text_post ?? initialConfig.wrap_text_post;
+        Config.auto_new_line =
+          json.auto_new_line ?? initialConfig.auto_new_line;
+        // Filters
+        Config.blacklist = json.blacklist ?? initialConfig.blacklist;
+        Config.disable_group =
+          json.disable_group ?? initialConfig.disable_group;
+        // File Modifiers
+        Config.delete_lines = json.delete_lines ?? initialConfig.delete_lines;
+        Config.replace_words =
+          json.replace_words ?? initialConfig.replace_words;
+        Config.backup_file = json.backup_file ?? initialConfig.backup_file;
+        // Paths
+        Config.translation_file =
+          json.translation_file ?? initialConfig.translation_file;
+        Config.execute = json.execute ?? initialConfig.execute;
         Config.hash = nanoid();
         Config = structuredClone(json);
       } catch (error) {

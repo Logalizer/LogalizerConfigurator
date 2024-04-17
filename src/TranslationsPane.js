@@ -120,6 +120,7 @@ function Variables({ TrIndex, Data }) {
     <PairArrayProvider
       ItemName={"Variables"}
       Data={transformedData}
+      TitlePair={["Starts With", "Ends With"]}
       ActionPostfix="translation_variables"
       AddAction={AddAction}
       EditAction={EditAction}
@@ -208,7 +209,7 @@ export default function TranslationsPane() {
               </Typography>
               <Variables TrIndex={i} Data={tr.variables} />
             </Paper>
-            <Enabled Index={i} Value={tr.enabled} />
+            <Enabled Index={i} Value={tr.enabled ?? true} />
             <Duplicates Index={i} Value={tr.duplicates} />
           </Stack>
         </Paper>

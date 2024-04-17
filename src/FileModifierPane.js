@@ -62,6 +62,7 @@ function ReplaceWords({ Data }) {
     <PairArrayProvider
       ItemName="Search Replace"
       Data={dataParser(Data)}
+      TitlePair={["Search", "Replace"]}
       ActionPostfix="replace_words"
     />
   );
