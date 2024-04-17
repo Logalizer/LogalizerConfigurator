@@ -163,14 +163,17 @@ function ConfigReducer(Config, action) {
     }
 
     // translation
+    // group
     case "changed_group": {
       Config.translations[action.index].group = action.value;
       return;
     }
+    // print
     case "changed_print": {
       Config.translations[action.index].print = action.value;
       return;
     }
+    // patterns
     case "added_patterns": {
       Config.translations[action.tr_index].patterns.push(action.value);
       return;
@@ -184,7 +187,36 @@ function ConfigReducer(Config, action) {
       Config.translations[action.tr_index].patterns.splice(action.index, 1);
       return;
     }
+    // enabled
+    case "changed_tr_enabled": {
+      Config.translations[action.tr_index].enabled = action.value;
+      return;
+    }
+    // duplicates
+    case "changed_tr_duplicates": {
+      Config.translations[action.tr_index].duplicates = action.value;
+      return;
+    }
 
+    // variables
+    case "added_variables": {
+      Config.translations[action.tr_index].variables.push({
+        startswith: action.value1,
+        endswith: action.value2,
+      });
+      return;
+    }
+    case "edited_variables": {
+      Config.translations[action.tr_index].variables[action.index] = {
+        startswith: action.value1,
+        endswith: action.value2,
+      };
+      return;
+    }
+    case "deleted_variables": {
+      Config.translations[action.tr_index].variables.splice(action.index, 1);
+      return;
+    }
     // json
     case "edited_json_config": {
       try {
@@ -227,7 +259,7 @@ const initialConfig = {
         { startswith: "a", endswith: "b" },
       ],
       enabled: true,
-      duplicates: "remove",
+      duplicates: "count_continuous",
     },
   ],
   backup_file:

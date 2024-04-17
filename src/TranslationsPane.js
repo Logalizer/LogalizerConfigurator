@@ -51,8 +51,7 @@ function Print({ Index, Text }) {
   );
 }
 function Patterns({ TrIndex, Data }) {
-  let AddAction;
-  AddAction = (text) => {
+  const AddAction = (text) => {
     return {
       type: "added_patterns",
       value: text,
@@ -86,18 +85,43 @@ function Patterns({ TrIndex, Data }) {
   );
 }
 
-function Variables({ Index, Data }) {
-  const config = useConfig();
+function Variables({ TrIndex, Data }) {
   const transformedData = Data.map((item, i) => {
     return [item.startswith, item.endswith];
   });
 
+  const AddAction = (text1, text2) => {
+    return {
+      type: "added_variables",
+      value1: text1,
+      value2: text2,
+      tr_index: TrIndex,
+    };
+  };
+  const EditAction = (Index, text1, text2) => {
+    return {
+      type: "edited_variables",
+      value1: text1,
+      value2: text2,
+      index: Index,
+      tr_index: TrIndex,
+    };
+  };
+  const DeleteAction = (Index) => {
+    return {
+      type: "deleted_variables",
+      index: Index,
+      tr_index: TrIndex,
+    };
+  };
   const variablesContent = (
     <PairArrayProvider
       ItemName={"Variables"}
-      // Data={config.translations[Index].variables}
       Data={transformedData}
       ActionPostfix="translation_variables"
+      AddAction={AddAction}
+      EditAction={EditAction}
+      DeleteAction={DeleteAction}
     />
   );
   return variablesContent;
@@ -105,7 +129,6 @@ function Variables({ Index, Data }) {
 
 function Enabled({ Index, Value }) {
   const dispatch = useConfigDispatch();
-  const config = useConfig();
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="standard">
       <FormControlLabel
@@ -117,6 +140,7 @@ function Enabled({ Index, Value }) {
               dispatch({
                 type: "changed_tr_enabled",
                 value: flag,
+                tr_index: Index,
               });
             }}
           />
@@ -128,17 +152,29 @@ function Enabled({ Index, Value }) {
 }
 
 function Duplicates({ Index, Value }) {
+  const dispatch = useConfigDispatch();
+  const options = [
+    { label: "allowed" },
+    { label: "remove" },
+    { label: "remove_continuous" },
+    { label: "count" },
+    { label: "count_continuous" },
+  ];
   return (
     <Autocomplete
       disablePortal
       id="combo-box-demo"
-      options={[
-        { label: "remove" },
-        { label: "remove_continuous" },
-        { label: "count" },
-        { label: "count_continuous" },
-      ]}
+      options={options}
       value={Value}
+      inputValue={Value}
+      onInputChange={(e, newInputValue) => {
+        console.log(newInputValue);
+        dispatch({
+          type: "changed_tr_duplicates",
+          value: newInputValue,
+          tr_index: Index,
+        });
+      }}
       sx={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="Duplicates" />}
     />
@@ -154,7 +190,7 @@ export default function TranslationsPane() {
         <Group Index={i} Text={tr.group} />
         <Print Index={i} Text={tr.print} />
         <Patterns TrIndex={i} Data={tr.patterns} />
-        <Variables Index={i} Data={tr.variables} />
+        <Variables TrIndex={i} Data={tr.variables} />
         <Enabled Index={i} Value={tr.enabled} />
         <Duplicates Index={i} Value={tr.duplicates} />
       </>
