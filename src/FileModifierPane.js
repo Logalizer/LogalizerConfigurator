@@ -15,6 +15,7 @@ import Box from "@mui/material/Box";
 
 import { useState } from "react";
 import ArrayProvider from "./ArrayProvider";
+import PairArrayProvider from "./PairArrayProvider.js";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
 
 function BackupFile() {
@@ -38,6 +39,32 @@ function BackupFile() {
   );
 }
 
+function ReplaceWords({ Data }) {
+  const dispatch = useConfigDispatch();
+  const config = useConfig();
+  const dataParser = (input) => {
+    let data = [];
+    Object.entries(input).forEach(([key, value]) => {
+      data.push([key, value]);
+    });
+    return data;
+  };
+  const dataParser2 = (input) => {
+    let data = [];
+    Object.entries(input).forEach(([key, value]) => {
+      data.push({ first: key, second: value });
+    });
+    return data;
+  };
+  return (
+    <PairArrayProvider
+      ItemName="Search Replace"
+      Data={dataParser(Data)}
+      ActionPostfix="replace_words"
+    />
+  );
+}
+
 export default function FileModifierPane() {
   const config = useConfig();
   return (
@@ -47,6 +74,7 @@ export default function FileModifierPane() {
         Data={config.delete_lines}
         ActionPostfix="delete_lines"
       />
+      <ReplaceWords Data={config.replace_words} />
       <BackupFile />
     </>
   );

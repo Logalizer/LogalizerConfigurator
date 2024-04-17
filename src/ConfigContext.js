@@ -26,18 +26,25 @@ export function useConfigDispatch() {
 
 function ConfigReducer(Config, action) {
   switch (action.type) {
+    // backup_file
     case "changed_backup_file": {
       Config.backup_file = action.value;
       return;
     }
+
+    // translation_file
     case "changed_translation_file": {
       Config.translation_file = action.value;
       return;
     }
+
+    // auto_new_line
     case "changed_auto_new_line": {
       Config.auto_new_line = action.value;
       return;
     }
+
+    // blacklist
     case "added_blacklist": {
       Config.blacklist.push(action.value);
       return;
@@ -50,6 +57,8 @@ function ConfigReducer(Config, action) {
       Config.blacklist.splice(action.index, 1);
       return;
     }
+
+    // execute
     case "added_execute": {
       Config.execute.push(action.value);
       return;
@@ -62,6 +71,8 @@ function ConfigReducer(Config, action) {
       Config.execute.splice(action.index, 1);
       return;
     }
+
+    // delete_lines
     case "added_delete_lines": {
       Config.delete_lines.push(action.value);
       return;
@@ -74,6 +85,8 @@ function ConfigReducer(Config, action) {
       Config.delete_lines.splice(action.index, 1);
       return;
     }
+
+    // disable_group
     case "added_disable_group": {
       Config.disable_group.push(action.value);
       return;
@@ -86,6 +99,8 @@ function ConfigReducer(Config, action) {
       Config.disable_group.splice(action.index, 1);
       return;
     }
+
+    // wrap_text_pre
     case "added_wrap_text_pre": {
       Config.wrap_text_pre.push(action.value);
       return;
@@ -98,6 +113,8 @@ function ConfigReducer(Config, action) {
       Config.wrap_text_pre.splice(action.index, 1);
       return;
     }
+
+    // wrap_text_post
     case "added_wrap_text_post": {
       Config.wrap_text_post.push(action.value);
       return;
@@ -111,9 +128,66 @@ function ConfigReducer(Config, action) {
       return;
     }
 
+    // replace_words
+    case "added_replace_words": {
+      Config.replace_words[action.value1] = action.value2;
+      return;
+    }
+    case "edited_replace_words": {
+      // bug: if action.value1 changes, then a new entry is created instead of editing
+      //Config.replace_words[action.value1] = action.value2;
+      // fix
+      const keys = Object.keys(Config.replace_words);
+      const oldentry = keys[action.index];
+      delete Config.replace_words[oldentry];
+      // order changes as it is re-entered
+      Config.replace_words[action.value1] = action.value2;
+
+      return;
+    }
+    case "deleted_replace_words": {
+      delete Config.replace_words[action.value1];
+      return;
+    }
+    case "added_replace_words2": {
+      Config.replace_words2[action.value1] = action.value2;
+      return;
+    }
+    case "edited_replace_words2": {
+      Config.replace_words2[action.value1] = action.value2;
+      return;
+    }
+    case "deleted_replace_words2": {
+      Config.replace_words2.splice(action.index, 1);
+      return;
+    }
+
+    // translation
+    case "changed_group": {
+      Config.translations[action.index].group = action.value;
+      return;
+    }
+    case "changed_print": {
+      Config.translations[action.index].print = action.value;
+      return;
+    }
+    case "added_patterns": {
+      Config.translations[action.tr_index].patterns.push(action.value);
+      return;
+    }
+    case "edited_patterns": {
+      Config.translations[action.tr_index].patterns[action.index] =
+        action.value;
+      return;
+    }
+    case "deleted_patterns": {
+      Config.translations[action.tr_index].patterns.splice(action.index, 1);
+      return;
+    }
+
+    // json
     case "edited_json_config": {
       try {
-        console.log(action.json);
         let json = JSON.parse(action.json);
         Config.translation_file =
           json.translation_file ?? initialConfig.translation_file;
@@ -143,6 +217,19 @@ function ConfigReducer(Config, action) {
 }
 
 const initialConfig = {
+  translations: [
+    {
+      group: "Group Name",
+      print: "A -> B: C",
+      patterns: ["a", "b"],
+      variables: [
+        { startswith: "a", endswith: "b" },
+        { startswith: "a", endswith: "b" },
+      ],
+      enabled: true,
+      duplicates: "remove",
+    },
+  ],
   backup_file:
     "${fileDirname}/generated_${fileBasenameNoExtension}/${fileBasename}.original",
   execute: [
@@ -155,6 +242,10 @@ const initialConfig = {
   disable_group: [],
   delete_lines: [],
   auto_new_line: true,
+  replace_words: {
+    search: "replace",
+    search2: "replace2",
+  },
   wrap_text_pre: ["@startuml"],
   wrap_text_post: ["@enduml"],
 };

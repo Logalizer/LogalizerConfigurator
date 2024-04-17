@@ -115,13 +115,15 @@ React Material > webpack
     - [x] dataStore state at the app level
     - [x] treat any JavaScript object that you put into state as read-only.
     - [x] Passing data deeply with context
-  - [ ] When json is updated update all the fields
-  - [ ] Have a global class to manage data store
-  - [ ] When a field changes directly update the data store
-  - [ ] Update JSON when the data store gets updated
+  - [x] When json is updated update all the fields
+  - [x] Have a global class to manage data store
+  - [x] When a field changes directly update the data store
+  - [x] Update JSON when the data store gets updated
 - [x] Continue further only if json contents are capturable
   - [x] Need to do manual deep copy
   - [x] Need to introduce "Apply" button., Apply to change and show parse errors
 - [x] Copy add delete from todo list app in examples
+- [ ] Add a component for two input fields with Array Provider
+- [ ] Drag drop with <https://dndkit.com/>
 - [ ] Find best way to add help in each section
 - [ ] Electron app

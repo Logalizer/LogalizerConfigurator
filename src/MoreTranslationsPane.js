@@ -6,38 +6,6 @@ import TextField from "@mui/material/TextField";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
 import ArrayProvider from "./ArrayProvider.js";
 
-function WrapTextPre() {
-  return (
-    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-      <TextField
-        fullWidth
-        id="outlined-multiline-flexible"
-        label="Wrap Text Pre"
-        multiline
-        maxRows={4}
-        rows={4}
-        defaultValue="@startuml"
-      />
-    </FormControl>
-  );
-}
-
-function WrapTextPost() {
-  return (
-    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-      <TextField
-        fullWidth
-        id="outlined-multiline-flexible"
-        label="Wrap Text Post"
-        multiline
-        maxRows={4}
-        rows={4}
-        defaultValue="@enduml"
-      />
-    </FormControl>
-  );
-}
-
 function AutoNewLine() {
   const dispatch = useConfigDispatch();
   const config = useConfig();
@@ -76,8 +44,6 @@ export default function MoreTranslationsPane() {
         Data={config.wrap_text_post}
         ActionPostfix="wrap_text_post"
       />
-      {/* <WrapTextPre />
-      <WrapTextPost /> */}
       <AutoNewLine />
     </div>
   );
