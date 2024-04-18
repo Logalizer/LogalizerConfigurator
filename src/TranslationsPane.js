@@ -14,7 +14,12 @@ import { Edit } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Unstable_Grid2";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import AddIcon from "@mui/icons-material/Add";
+import Box from "@mui/material/Box";
 
+import Collapse from "@mui/material/Collapse";
 function Group({ Index, Text }) {
   const dispatch = useConfigDispatch();
   return (
@@ -138,7 +143,7 @@ function Variables({ TrIndex, Data }) {
 function Enabled({ Index, Value }) {
   const dispatch = useConfigDispatch();
   return (
-    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+    <FormControl fullWidth variant="standard">
       <FormControlLabel
         control={
           <Switch
@@ -153,7 +158,7 @@ function Enabled({ Index, Value }) {
             }}
           />
         }
-        label="Enabled"
+        label="Enable"
       />
     </FormControl>
   );
@@ -210,39 +215,120 @@ function DeleteBtn() {
 // Feature: Different views for seeing translations
 // Feature: Lazy load translations only if the UI is slow
 
+function Translation({ Index, Translation, Details }) {
+  // 0 - undefined
+  // 1 - hide
+  // 2 = show
+  const [localChecked, setLocalChecked] = useState(0);
+  const i = Index;
+  const tr = Translation;
+  const showProp = { display: { xl: "none", xs: "block" } };
+  const hideProp = { display: { xs: "none", md: "block" } };
+  let show;
+  if (Details == true) {
+    if (localChecked == 0) {
+      show = true;
+    } else if (localChecked == 1) {
+      show = false;
+    } else if (localChecked == 2) {
+      show = true;
+    }
+  } else {
+    if (localChecked == 0) {
+      show = false;
+    } else if (localChecked == 1) {
+      show = false;
+    } else if (localChecked == 2) {
+      show = true;
+    }
+  }
+  return (
+    <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
+      <Grid container spacing={2}>
+        <Grid xs>
+          <Group Index={i} Text={tr.group} />
+        </Grid>
+        <Grid xs={8}>
+          <Print Index={i} Text={tr.print} />
+          <Typography variant="h5" component="h5"></Typography>
+        </Grid>
+        <Grid xs="auto">
+          <Stack direction="row">
+            <Enabled Index={i} Value={tr.enabled ?? true} />
+            <DeleteBtn />
+            <Box
+              paddingTop={1}
+              onClick={(e) => {
+                setLocalChecked((prev) => {
+                  if (prev == 0 || prev == 1) return 2;
+                  return 1;
+                });
+              }}
+            >
+              <ExpandMoreIcon sx={show ? showProp : hideProp} />
+              <ExpandLessIcon sx={show ? hideProp : showProp} />
+            </Box>
+          </Stack>
+        </Grid>
+
+        <Grid xs={12}>
+          <Collapse orientation="vertical" in={show}>
+            <Grid xs={12}>
+              <Paper elevation={0} sx={{}}>
+                {" "}
+                <Typography variant="h5" component="h5" sx={{ mb: 1 }}>
+                  Patterns
+                </Typography>
+                <Patterns TrIndex={i} Data={tr.patterns} />
+              </Paper>
+            </Grid>
+
+            <Grid xs={12}>
+              <Paper elevation={0}>
+                <Typography variant="h5" component="h5" sx={{ mb: 1 }}>
+                  Variables
+                </Typography>
+                <Variables TrIndex={i} Data={tr.variables} />
+              </Paper>
+            </Grid>
+
+            <Grid xs={12}>
+              <Duplicates Index={i} Value={tr.duplicates ?? "allowed"} />
+            </Grid>
+          </Collapse>
+        </Grid>
+      </Grid>
+    </Paper>
+  );
+}
+
 export default function TranslationsPane() {
   const config = useConfig();
+  const [checked, setChecked] = useState(false);
 
+  const handleChange = () => {
+    setChecked((prev) => !prev);
+  };
   const translations = config.translations.map((tr, i) => {
-    return (
-      <>
-        <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
-          <Stack direction="column" spacing={2}>
-            <Typography variant="h5" component="h5"></Typography>
-            <Group Index={i} Text={tr.group} />
-            <Print Index={i} Text={tr.print} />
-            <Paper elevation={2} sx={{ margin: 2, p: 2 }}>
-              <Typography variant="h5" component="h5" sx={{ mb: 1 }}>
-                Patterns
-              </Typography>
-              <Patterns TrIndex={i} Data={tr.patterns} />
-            </Paper>
-            <Paper elevation={2} sx={{ margin: 2, p: 2 }}>
-              <Typography variant="h5" component="h5" sx={{ mb: 1 }}>
-                Variables
-              </Typography>
-              <Variables TrIndex={i} Data={tr.variables} />
-            </Paper>
-            <Stack direction="row" spacing={2}>
-              <Duplicates Index={i} Value={tr.duplicates ?? "allowed"} />
-              <Enabled Index={i} Value={tr.enabled ?? true} />
-              <DeleteBtn />
-            </Stack>
-          </Stack>
-        </Paper>
-      </>
-    );
+    return <Translation Index={i} Translation={tr} Details={checked} />;
   });
 
-  return <>{translations}</>;
+  return (
+    <>
+      <IconButton aria-label="add">
+        <AddIcon
+          onClick={() => {
+            if (text.length === 0) return;
+            dispatch(AddAction(text));
+            setText("");
+          }}
+        />
+      </IconButton>
+      <FormControlLabel
+        control={<Switch checked={checked} onChange={handleChange} />}
+        label="Show Details"
+      />
+      {translations}
+    </>
+  );
 }
