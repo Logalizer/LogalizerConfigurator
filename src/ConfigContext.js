@@ -217,6 +217,14 @@ function ConfigReducer(Config, action) {
       Config.translations[action.tr_index].variables.splice(action.index, 1);
       return;
     }
+    case "added_translation": {
+      Config.translations.push(initialConfig.translations[0]);
+      return;
+    }
+    case "deleted_translation": {
+      Config.translations.splice(action.index, 1);
+      return;
+    }
     // json
     case "edited_json_config": {
       try {
@@ -246,7 +254,7 @@ function ConfigReducer(Config, action) {
         Config.hash = nanoid();
         Config = structuredClone(json);
       } catch (error) {
-        alert(error);
+        alert("Json Parsing Error\n" + error);
       }
       return;
     }
@@ -260,14 +268,20 @@ const initialConfig = {
   translations: [
     {
       group: "Group Name",
-      print: "A -> B: C",
-      patterns: ["a", "b"],
+      print: "Alice -> Bob: Hello",
+      patterns: ["Hello Bob"],
+      variables: [],
+    },
+    {
+      group: "Group Name",
+      print: "Bob -> Alice: Hi",
+      patterns: ["Alice", "Hi Bob"],
       variables: [
         { startswith: "a", endswith: "b" },
         { startswith: "a", endswith: "b" },
       ],
       enabled: true,
-      duplicates: "count_continuous",
+      duplicates: "allowed",
     },
   ],
   backup_file:

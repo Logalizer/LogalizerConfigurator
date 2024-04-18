@@ -124,9 +124,21 @@ React Material > webpack
   - [x] Need to introduce "Apply" button., Apply to change and show parse errors
 - [x] Copy add delete from todo list app in examples
 - [x] Add a component for two input fields with Array Provider
+- [ ] Copy json button
 - [ ] Prioritize bugs
-- [ ] Build and check
+- [x] Build and check
 - [ ] Fix major ones
 - [ ] Drag drop with <https://dndkit.com/>
 - [ ] Find best way to add help in each section
 - [ ] Electron app
+
+- [x] Feature: Add provision to add new translation
+- [x] Feature: Translations must be deletable
+- [x] UI needs to be compactUI to be redesigned
+- [x] since many translations are there not able to differentiate when the next one starts
+- [x] UI shall allow shrinking translations
+- [ ] Feature: UI shall allow reordering
+- [x] Feature: Different views for seeing translations
+- [ ] Feature: Lazy load translations only if the UI is slow
+- [ ] Bug: Show alert in a modern format with close button
+- [ ] Edit button on array provider is opening an input field, make it modern

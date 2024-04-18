@@ -9,10 +9,12 @@
         "eject": "react-scripts eject"
     },
     "dependencies": {
+        "@codemirror/lang-json": "^6.0.1",
         "@emotion/react": "latest",
         "@emotion/styled": "latest",
         "@mui/icons-material": "^5.15.15",
         "@mui/material": "next",
+        "@uiw/react-codemirror": "^4.21.25",
         "immer": "^10.0.4",
         "react": "latest",
         "react-dom": "latest",

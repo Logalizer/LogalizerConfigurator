@@ -2,14 +2,43 @@ import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-import React from "react";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-// Bug: Show line numbers
-// Bug: Show alert in a mordern format with close button
+import React from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { json } from "@codemirror/lang-json";
 
-export default function JsonPane() {
+import Stack from "@mui/material/Stack";
+
+function CodeMirrorJsonPane() {
+  const dispatch = useConfigDispatch();
+  const config = useConfig();
+  const [value, setValue] = React.useState(JSON.stringify(config, null, 2));
+  const onChange = React.useCallback((val, viewUpdate) => {
+    setValue(val);
+  }, []);
+
+  return (
+    <Stack>
+      <Button
+        variant="contained"
+        onClick={(e) => {
+          dispatch({
+            type: "edited_json_config",
+            json: value,
+          });
+        }}
+      >
+        Apply
+      </Button>
+
+      <CodeMirror value={JSON.stringify(config, null, 2)} onChange={onChange} />
+    </Stack>
+  );
+}
+
+function MUIJsonPane() {
   const dispatch = useConfigDispatch();
   const config = useConfig();
   const textInput = React.createRef();
@@ -46,4 +75,8 @@ export default function JsonPane() {
       </FormControl>
     </div>
   );
+}
+
+export default function JsonPane() {
+  return CodeMirrorJsonPane();
 }

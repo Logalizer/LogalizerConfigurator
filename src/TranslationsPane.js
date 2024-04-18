@@ -17,6 +17,8 @@ import Grid from "@mui/material/Unstable_Grid2";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AddIcon from "@mui/icons-material/Add";
+
+import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
 import Collapse from "@mui/material/Collapse";
@@ -194,26 +196,21 @@ function Duplicates({ Index, Value }) {
   );
 }
 
-function DeleteBtn() {
+function DeleteBtn({ Index }) {
+  const dispatch = useConfigDispatch();
   return (
     <IconButton aria-label="delete">
       <DeleteIcon
         onClick={(e) => {
-          dispatch(DeleteAction(Index));
+          dispatch({
+            type: "deleted_translation",
+            index: Index,
+          });
         }}
       />
     </IconButton>
   );
 }
-
-// Feature: Add provision to add new translation
-// Feature: Translations must be deletable
-// Bug: UI needs to be compactUI to be redesigned
-// Bug: since many translations are there not able to differenciate when the next one starts
-// Feature: UI shall allow shrinking translations
-// Feature: UI shall allow reordering
-// Feature: Different views for seeing translations
-// Feature: Lazy load translations only if the UI is slow
 
 function Translation({ Index, Translation, Details }) {
   // 0 - undefined
@@ -229,9 +226,6 @@ function Translation({ Index, Translation, Details }) {
   const showProp = { display: { xl: "none", xs: "block" } };
   const hideProp = { display: { xs: "none", md: "block" } };
   let show;
-  console.log("Detilas ", Details);
-  console.log("prevDetails ", viewDetails.prevDetails);
-  console.log("localDetails ", viewDetails.localDetails);
   if (Details != viewDetails.prevDetails) {
     show = Details;
     viewDetails.prevDetails = Details;
@@ -252,7 +246,7 @@ function Translation({ Index, Translation, Details }) {
         <Grid xs="auto">
           <Stack direction="row">
             <Enabled Index={i} Value={tr.enabled ?? true} />
-            <DeleteBtn />
+            <DeleteBtn Index={i} />
             <Box
               paddingTop={1}
               onClick={(e) => {
@@ -299,7 +293,22 @@ function Translation({ Index, Translation, Details }) {
     </Paper>
   );
 }
-
+function AddTranslationButton() {
+  const dispatch = useConfigDispatch();
+  return (
+    <Button
+      variant="outlined"
+      onClick={(e) => {
+        dispatch({
+          type: "added_translation",
+        });
+      }}
+      startIcon={<AddIcon />}
+    >
+      Add New Translation
+    </Button>
+  );
+}
 export default function TranslationsPane() {
   const config = useConfig();
   const [checked, setChecked] = useState(false);
@@ -313,19 +322,13 @@ export default function TranslationsPane() {
 
   return (
     <>
-      <IconButton aria-label="add">
-        <AddIcon
-          onClick={() => {
-            if (text.length === 0) return;
-            dispatch(AddAction(text));
-            setText("");
-          }}
+      <Stack direction="row" spacing={2} sx={{ margin: 2 }}>
+        <AddTranslationButton />
+        <FormControlLabel
+          control={<Switch checked={checked} onChange={handleChange} />}
+          label="Show Details"
         />
-      </IconButton>
-      <FormControlLabel
-        control={<Switch checked={checked} onChange={handleChange} />}
-        label="Show Details"
-      />
+      </Stack>
       {translations}
     </>
   );
