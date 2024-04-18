@@ -18,6 +18,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import AddIcon from "@mui/icons-material/Add";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
@@ -198,17 +203,57 @@ function Duplicates({ Index, Value }) {
 
 function DeleteBtn({ Index }) {
   const dispatch = useConfigDispatch();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
-    <IconButton aria-label="delete">
-      <DeleteIcon
-        onClick={(e) => {
-          dispatch({
-            type: "deleted_translation",
-            index: Index,
-          });
-        }}
-      />
-    </IconButton>
+    <>
+      <IconButton aria-label="delete">
+        <DeleteIcon
+          onClick={(e) => {
+            handleClickOpen();
+          }}
+        />
+      </IconButton>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Delete Translation"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this translation?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={(e) => {
+              dispatch({
+                type: "deleted_translation",
+                index: Index,
+              });
+              setOpen(false);
+            }}
+          >
+            Yes
+          </Button>
+          <Button onClick={handleClose} autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
