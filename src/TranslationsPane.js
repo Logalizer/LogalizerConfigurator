@@ -219,28 +219,25 @@ function Translation({ Index, Translation, Details }) {
   // 0 - undefined
   // 1 - hide
   // 2 = show
-  const [localChecked, setLocalChecked] = useState(0);
+  const [viewDetails, setViewDetails] = useState({
+    Details: Details,
+    prevDetails: Details,
+    localDetails: false,
+  });
   const i = Index;
   const tr = Translation;
   const showProp = { display: { xl: "none", xs: "block" } };
   const hideProp = { display: { xs: "none", md: "block" } };
   let show;
-  if (Details == true) {
-    if (localChecked == 0) {
-      show = true;
-    } else if (localChecked == 1) {
-      show = false;
-    } else if (localChecked == 2) {
-      show = true;
-    }
+  console.log("Detilas ", Details);
+  console.log("prevDetails ", viewDetails.prevDetails);
+  console.log("localDetails ", viewDetails.localDetails);
+  if (Details != viewDetails.prevDetails) {
+    show = Details;
+    viewDetails.prevDetails = Details;
+    viewDetails.localDetails = Details;
   } else {
-    if (localChecked == 0) {
-      show = false;
-    } else if (localChecked == 1) {
-      show = false;
-    } else if (localChecked == 2) {
-      show = true;
-    }
+    show = viewDetails.localDetails;
   }
   return (
     <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
@@ -259,14 +256,15 @@ function Translation({ Index, Translation, Details }) {
             <Box
               paddingTop={1}
               onClick={(e) => {
-                setLocalChecked((prev) => {
-                  if (prev == 0 || prev == 1) return 2;
-                  return 1;
+                setViewDetails((prev) => {
+                  return {
+                    ...prev,
+                    localDetails: !prev.localDetails,
+                  };
                 });
               }}
             >
-              <ExpandMoreIcon sx={show ? showProp : hideProp} />
-              <ExpandLessIcon sx={show ? hideProp : showProp} />
+              {show ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </Box>
           </Stack>
         </Grid>
