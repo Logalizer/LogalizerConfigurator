@@ -4,15 +4,19 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
 import ArrayProvider from "./ArrayProvider.js";
-
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
+import { PaperStack } from "./Utils.js";
+
 function TranslationFile() {
   const dispatch = useConfigDispatch();
   const config = useConfig();
   return (
-    <FormControl fullWidth sx={{ m: 2 }} variant="standard">
+    <FormControl fullWidth sx={{}} variant="standard">
       <TextField
         fullWidth
         id="translation_file"
@@ -41,18 +45,56 @@ function Execute() {
   );
 }
 
+function InfoHelp1({ children }) {
+  return (
+    <>
+      <Stack direction="row">
+        <InfoOutlinedIcon />
+        <Typography
+          variant="body2"
+          display="block"
+          gutterBottom
+          sx={{ p: 0.4 }}
+        >
+          {children}
+        </Typography>
+      </Stack>
+    </>
+  );
+}
+
+function InfoHelp({ children }) {
+  return (
+    <>
+      <Alert severity="info" variant="outlined">
+        {children}
+      </Alert>
+    </>
+  );
+}
+
 export default function PathsPane() {
   return (
     <div>
-      <TranslationFile />
-      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
-        <Stack direction="column" spacing={2}>
-          <Typography variant="h5" component="h5">
-            Execute
-          </Typography>
-          <Execute />
-        </Stack>
-      </Paper>
+      <PaperStack Title="Translation File">
+        <InfoHelp>
+          Define the path where the translation file should be created. You can
+          use Special Variables in the path.
+        </InfoHelp>
+        <TranslationFile />
+      </PaperStack>
+
+      <PaperStack Title="Execute Commands">
+        <InfoHelp>
+          Define the list of commands that must get executed after the
+          translation file is created. You can use Special Variables in the
+          path.
+        </InfoHelp>
+        <Execute />
+      </PaperStack>
+      <PaperStack Title="Special Variables">
+        <p></p>
+      </PaperStack>
     </div>
   );
 }

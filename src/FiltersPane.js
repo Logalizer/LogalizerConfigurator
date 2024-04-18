@@ -9,34 +9,36 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 
+import { PaperStack } from "./Utils.js";
+import Alert from "@mui/material/Alert";
 export default function FiltersPane() {
   const config = useConfig();
   return (
     <>
-      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
-        <Stack direction="column" spacing={2}>
-          <Typography variant="h5" component="h5">
-            Blacklist
-          </Typography>
-          <ArrayProvider
-            ItemName="Blacklist"
-            Data={config.blacklist}
-            ActionPostfix="blacklist"
-          />
-        </Stack>
-      </Paper>
-      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
-        <Stack direction="column" spacing={2}>
-          <Typography variant="h5" component="h5">
-            Disable Group
-          </Typography>
-          <ArrayProvider
-            ItemName="Disable Group"
-            Data={config.disable_group}
-            ActionPostfix="disable_group"
-          />
-        </Stack>
-      </Paper>
+      <PaperStack Title="Disable Group">
+        <Alert severity="info" variant="outlined">
+          Used to disable a group of translations. Typically used when you want
+          to filter out groups providing low level details.
+        </Alert>
+        <ArrayProvider
+          ItemName="Disable Group"
+          Data={config.disable_group}
+          ActionPostfix="disable_group"
+        />
+      </PaperStack>
+      <PaperStack Title="Blacklist">
+        <Alert severity="info" variant="outlined">
+          If the translation matches the below tokens they will not be printed.
+          Use when you want to filter out a translation with a particular
+          captured variable that is repetitive or useless but keep others values
+          that are useful.
+        </Alert>
+        <ArrayProvider
+          ItemName="Blacklist"
+          Data={config.blacklist}
+          ActionPostfix="blacklist"
+        />
+      </PaperStack>
     </>
   );
 }

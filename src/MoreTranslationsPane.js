@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
 import ArrayProvider from "./ArrayProvider.js";
+import { PaperStack } from "./Utils.js";
+import Alert from "@mui/material/Alert";
 
 function AutoNewLine() {
   const dispatch = useConfigDispatch();
@@ -36,31 +38,37 @@ export default function MoreTranslationsPane() {
   const config = useConfig();
   return (
     <div>
-      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
-        <Stack direction="column" spacing={2}>
-          <Typography variant="h5" component="h5">
-            Wrap Text Pre
-          </Typography>
-          <ArrayProvider
-            ItemName="Wrap Text Pre"
-            Data={config.wrap_text_pre}
-            ActionPostfix="wrap_text_pre"
-          />
-        </Stack>
-      </Paper>
-      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
-        <Stack direction="column" spacing={2}>
-          <Typography variant="h5" component="h5">
-            Wrap Text Post
-          </Typography>
-          <ArrayProvider
-            ItemName="Wrap Text Post"
-            Data={config.wrap_text_post}
-            ActionPostfix="wrap_text_post"
-          />
-        </Stack>
-      </Paper>
-      <AutoNewLine />
+      <PaperStack Title="Wrap Text Pre">
+        <Alert severity="info" variant="outlined">
+          A list of lines that will be added to the top of the translation file.
+        </Alert>
+        <ArrayProvider
+          ItemName="Wrap Text Pre"
+          Data={config.wrap_text_pre}
+          ActionPostfix="wrap_text_pre"
+        />
+      </PaperStack>
+
+      <PaperStack Title="Wrap Text Post">
+        <Alert severity="info" variant="outlined">
+          This defines a list of lines that will be added at the end of the
+          translation file.
+        </Alert>
+        <ArrayProvider
+          ItemName="Wrap Text Post"
+          Data={config.wrap_text_post}
+          ActionPostfix="wrap_text_post"
+        />
+      </PaperStack>
+      <PaperStack Title="Wrap Text Post">
+        <Alert severity="info" variant="outlined">
+          If set to false new line is not inserted automatically after every
+          translation is printed. You can add '\n' if you want in your prints.
+          This might be helpful if you want multiple translation prints in a
+          single line.
+        </Alert>
+        <AutoNewLine />
+      </PaperStack>
     </div>
   );
 }

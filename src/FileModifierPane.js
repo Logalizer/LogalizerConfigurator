@@ -5,6 +5,7 @@ import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import Alert from "@mui/material/Alert";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -19,6 +20,7 @@ import { useState } from "react";
 import ArrayProvider from "./ArrayProvider";
 import PairArrayProvider from "./PairArrayProvider.js";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
+import { PaperStack } from "./Utils.js";
 
 function BackupFile() {
   const dispatch = useConfigDispatch();
@@ -51,13 +53,6 @@ function ReplaceWords({ Data }) {
     });
     return data;
   };
-  const dataParser2 = (input) => {
-    let data = [];
-    Object.entries(input).forEach(([key, value]) => {
-      data.push({ first: key, second: value });
-    });
-    return data;
-  };
 
   return (
     <PairArrayProvider
@@ -73,28 +68,36 @@ export default function FileModifierPane() {
   const config = useConfig();
   return (
     <>
-      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
-        <Stack direction="column" spacing={2}>
-          <Typography variant="h5" component="h5">
-            Delete Lines
-          </Typography>
-          <ArrayProvider
-            ItemName="Delete Lines"
-            Data={config.delete_lines}
-            ActionPostfix="delete_lines"
-          />
-        </Stack>
-      </Paper>
+      <Alert severity="warning" variant="outlined" sx={{ mt: 2 }}>
+        The input file contents will be modified with the below configuration.
+      </Alert>
+      <PaperStack Title="Delete Lines">
+        <Alert severity="info" variant="outlined">
+          If the file contains a matching pattern, those lines will be deleted.
+          Typically used to remove unnecessary logs.
+        </Alert>
+        <ArrayProvider
+          ItemName="Delete Lines"
+          Data={config.delete_lines}
+          ActionPostfix="delete_lines"
+        />
+      </PaperStack>
 
-      <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
-        <Stack direction="column" spacing={2}>
-          <Typography variant="h5" component="h5">
-            Replace Words
-          </Typography>
-          <ReplaceWords Data={config.replace_words} />
-        </Stack>
-      </Paper>
-      <BackupFile />
+      <PaperStack Title="Replace Words">
+        <Alert severity="info" variant="outlined">
+          Just like find and replace. The input file contents will be modified.
+          Typically used to replace enum numbers with names.
+        </Alert>
+        <ReplaceWords Data={config.replace_words} />
+      </PaperStack>
+
+      <PaperStack Title="Backup Input File">
+        <Alert severity="info" variant="outlined">
+          Use this to take a backup before the file is modified by Delete Lines
+          and Replace Words configuration.
+        </Alert>
+        <BackupFile />
+      </PaperStack>
     </>
   );
 }
