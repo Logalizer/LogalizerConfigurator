@@ -32,6 +32,7 @@ function AddItem({ ItemName, AddAction, TitlePair }) {
           label={TitlePair[0]}
           variant="outlined"
           value={text1}
+          size="small"
           onChange={(e) => setText1(e.target.value)}
         />
         <TextField
@@ -40,6 +41,7 @@ function AddItem({ ItemName, AddAction, TitlePair }) {
           label={TitlePair[1]}
           variant="outlined"
           value={text2}
+          size="small"
           onChange={(e) => setText2(e.target.value)}
         />
 
@@ -119,7 +121,8 @@ function Item({ Index, Text1, Text2, EditAction, DeleteAction }) {
     </>
   );
 }
-
+// Bug: Some times add is not working
+// Bug: When a big text is added then the column width gets adjusted
 export default function PairArrayProvider({
   ItemName,
   Data,

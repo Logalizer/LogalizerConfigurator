@@ -2,8 +2,8 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -26,6 +26,7 @@ function AddItem({ ItemName, AddAction }) {
         label={placeholder}
         variant="outlined"
         value={text}
+        size="small"
         onChange={(e) => setText(e.target.value)}
       />
       <IconButton aria-label="add">

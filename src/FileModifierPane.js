@@ -58,6 +58,7 @@ function ReplaceWords({ Data }) {
     });
     return data;
   };
+
   return (
     <PairArrayProvider
       ItemName="Search Replace"

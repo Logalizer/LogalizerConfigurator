@@ -11,6 +11,9 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 import { Edit } from "@mui/icons-material";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Grid from "@mui/material/Unstable_Grid2";
 
 function Group({ Index, Text }) {
   const dispatch = useConfigDispatch();
@@ -21,6 +24,7 @@ function Group({ Index, Text }) {
         id="group"
         label="Group"
         value={Text}
+        size="small"
         onChange={(e) => {
           dispatch({
             type: "changed_group",
@@ -41,6 +45,7 @@ function Print({ Index, Text }) {
         id="print"
         label="Print"
         value={Text}
+        size="small"
         onChange={(e) => {
           dispatch({
             type: "changed_print",
@@ -184,6 +189,27 @@ function Duplicates({ Index, Value }) {
   );
 }
 
+function DeleteBtn() {
+  return (
+    <IconButton aria-label="delete">
+      <DeleteIcon
+        onClick={(e) => {
+          dispatch(DeleteAction(Index));
+        }}
+      />
+    </IconButton>
+  );
+}
+
+// Feature: Add provision to add new translation
+// Feature: Translations must be deletable
+// Bug: UI needs to be compactUI to be redesigned
+// Bug: since many translations are there not able to differenciate when the next one starts
+// Feature: UI shall allow shrinking translations
+// Feature: UI shall allow reordering
+// Feature: Different views for seeing translations
+// Feature: Lazy load translations only if the UI is slow
+
 export default function TranslationsPane() {
   const config = useConfig();
 
@@ -192,9 +218,7 @@ export default function TranslationsPane() {
       <>
         <Paper elevation={3} sx={{ margin: 2, p: 2 }}>
           <Stack direction="column" spacing={2}>
-            <Typography variant="h5" component="h5">
-              {tr.print}
-            </Typography>
+            <Typography variant="h5" component="h5"></Typography>
             <Group Index={i} Text={tr.group} />
             <Print Index={i} Text={tr.print} />
             <Paper elevation={2} sx={{ margin: 2, p: 2 }}>
@@ -209,8 +233,11 @@ export default function TranslationsPane() {
               </Typography>
               <Variables TrIndex={i} Data={tr.variables} />
             </Paper>
-            <Enabled Index={i} Value={tr.enabled ?? true} />
-            <Duplicates Index={i} Value={tr.duplicates} />
+            <Stack direction="row" spacing={2}>
+              <Duplicates Index={i} Value={tr.duplicates ?? "allowed"} />
+              <Enabled Index={i} Value={tr.enabled ?? true} />
+              <DeleteBtn />
+            </Stack>
           </Stack>
         </Paper>
       </>

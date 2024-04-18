@@ -6,6 +6,9 @@ import React from "react";
 import { useConfig, useConfigDispatch } from "./ConfigContext.js";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+// Bug: Show line numbers
+// Bug: Show alert in a mordern format with close button
+
 export default function JsonPane() {
   const dispatch = useConfigDispatch();
   const config = useConfig();

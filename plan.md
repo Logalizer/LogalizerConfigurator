@@ -123,7 +123,10 @@ React Material > webpack
   - [x] Need to do manual deep copy
   - [x] Need to introduce "Apply" button., Apply to change and show parse errors
 - [x] Copy add delete from todo list app in examples
-- [ ] Add a component for two input fields with Array Provider
+- [x] Add a component for two input fields with Array Provider
+- [ ] Prioritize bugs
+- [ ] Build and check
+- [ ] Fix major ones
 - [ ] Drag drop with <https://dndkit.com/>
 - [ ] Find best way to add help in each section
 - [ ] Electron app
