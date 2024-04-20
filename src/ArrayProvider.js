@@ -15,7 +15,8 @@ import Paper from "@mui/material/Paper";
 import React from "react";
 
 function AddItem({ ItemName, AddAction }) {
-  const [text, setText] = useState("");
+  // const [text, setText] = useState("");
+  const textInput = React.createRef();
   const dispatch = useConfigDispatch();
   const placeholder = "Add " + ItemName;
   return (
@@ -23,18 +24,17 @@ function AddItem({ ItemName, AddAction }) {
       <TextField
         id="outlined-basic"
         fullWidth
+        inputRef={textInput}
         label={placeholder}
         variant="outlined"
-        value={text}
         size="small"
-        onChange={(e) => setText(e.target.value)}
       />
       <IconButton aria-label="add">
         <AddIcon
           onClick={() => {
-            if (text.length === 0) return;
-            dispatch(AddAction(text));
-            setText("");
+            if (textInput.current.value.length === 0) return;
+            dispatch(AddAction(textInput.current.value));
+            textInput.current.value = "";
           }}
         />
       </IconButton>
@@ -48,7 +48,6 @@ function Item({ Index, Text, EditAction, DeleteAction }) {
   let ItemContent;
   let text;
   const textInput = React.createRef();
-  console.log("Drawn  ", isEditing);
   if (isEditing) {
     ItemContent = (
       <>
@@ -61,7 +60,12 @@ function Item({ Index, Text, EditAction, DeleteAction }) {
             }}
           />
         </IconButton>
-        <input defaultValue={Text} ref={textInput} />
+        <TextField
+          id="outlined-basic"
+          defaultValue={Text}
+          inputRef={textInput}
+          size="small"
+        />
       </>
     );
   } else {

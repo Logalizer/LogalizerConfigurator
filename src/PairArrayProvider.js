@@ -18,9 +18,12 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+
+import Grid from "@mui/material/Unstable_Grid2";
+
 function AddItem({ ItemName, AddAction, TitlePair }) {
-  const [text1, setText1] = useState("");
-  const [text2, setText2] = useState("");
+  const text1Input = React.createRef();
+  const text2Input = React.createRef();
   const dispatch = useConfigDispatch();
   const placeholder = "Add " + ItemName;
   return (
@@ -29,28 +32,33 @@ function AddItem({ ItemName, AddAction, TitlePair }) {
         <TextField
           id="outlined-basic"
           fullWidth
+          inputRef={text1Input}
           label={TitlePair[0]}
           variant="outlined"
-          value={text1}
           size="small"
-          onChange={(e) => setText1(e.target.value)}
         />
         <TextField
           id="outlined-basic"
           fullWidth
+          inputRef={text2Input}
           label={TitlePair[1]}
           variant="outlined"
-          value={text2}
           size="small"
-          onChange={(e) => setText2(e.target.value)}
         />
 
         <IconButton aria-label="add">
           <AddIcon
             onClick={() => {
-              dispatch(AddAction(text1, text2));
-              setText1("");
-              setText2("");
+              console.log(
+                "ap",
+                text1Input.current.value,
+                text2Input.current.value
+              );
+              dispatch(
+                AddAction(text1Input.current.value, text2Input.current.value)
+              );
+              text1Input.current.value = "";
+              text2Input.current.value = "";
             }}
           />
         </IconButton>
@@ -65,8 +73,26 @@ function Item({ Index, Text1, Text2, EditAction, DeleteAction }) {
   let ItemContent;
   const textInput1 = React.createRef();
   const textInput2 = React.createRef();
-  const editInput1 = <input defaultValue={Text1} ref={textInput1} />;
-  const editInput2 = <input defaultValue={Text2} ref={textInput2} />;
+  const editInput1 = (
+    <TextField
+      id="outlined-basic"
+      fullWidth
+      defaultValue={Text1}
+      inputRef={textInput1}
+      variant="outlined"
+      size="small"
+    />
+  );
+  const editInput2 = (
+    <TextField
+      id="outlined-basic"
+      fullWidth
+      defaultValue={Text2}
+      inputRef={textInput2}
+      variant="outlined"
+      size="small"
+    />
+  );
   const saveButton = (
     <IconButton aria-label="save">
       <SaveIcon
@@ -100,24 +126,24 @@ function Item({ Index, Text1, Text2, EditAction, DeleteAction }) {
   if (isEditing) {
     ItemContent = (
       <>
-        <TableCell> {editInput1}</TableCell>
-        <TableCell>{editInput2}</TableCell>
-        <TableCell>{saveButton}</TableCell>
+        <Grid xs={6}> {editInput1}</Grid>
+        <Grid xs={5}> {editInput2}</Grid>
+        <Grid xs="auto"> {saveButton}</Grid>
       </>
     );
   } else {
     ItemContent = (
       <>
-        <TableCell> {Text1}</TableCell>
-        <TableCell>{Text2}</TableCell>
-        <TableCell>{editButton}</TableCell>
+        <Grid xs={6}> {Text1}</Grid>
+        <Grid xs={5}> {Text2}</Grid>
+        <Grid xs="auto"> {editButton}</Grid>
       </>
     );
   }
   return (
     <>
       {ItemContent}
-      {deleteButton}
+      <Grid xs="auto"> {deleteButton}</Grid>
     </>
   );
 }
@@ -166,16 +192,14 @@ export default function PairArrayProvider({
   let items = [];
   Data.forEach((text, i) => {
     items.push(
-      <TableRow key={i}>
-        <Item
-          key={i + text[0] + text[1]}
-          Index={i}
-          Text1={text[0]}
-          Text2={text[1]}
-          EditAction={EditAction}
-          DeleteAction={DeleteAction}
-        />
-      </TableRow>
+      <Item
+        key={i + text[0] + text[1]}
+        Index={i}
+        Text1={text[0]}
+        Text2={text[1]}
+        EditAction={EditAction}
+        DeleteAction={DeleteAction}
+      />
     );
   });
   return (
@@ -186,21 +210,17 @@ export default function PairArrayProvider({
         TitlePair={TitlePair}
       />
 
-      <Stack direction="column">
-        <TableContainer component={Paper}>
-          <Table size="small" sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>{TitlePair[0]}</TableCell>
-                <TableCell>{TitlePair[1]}</TableCell>
-                <TableCell style={{ width: 30 }}></TableCell>
-                <TableCell style={{ width: 30 }}></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{items}</TableBody>
-          </Table>
-        </TableContainer>
-      </Stack>
+      <Grid container>
+        <Grid xs={6}>
+          <b>{TitlePair[0]}</b>
+        </Grid>
+        <Grid xs={5}>
+          <b>{TitlePair[1]}</b>
+        </Grid>
+        <Grid xs="auto"></Grid>
+        <Grid xs="auto"></Grid>
+        {items}
+      </Grid>
     </>
   );
 }

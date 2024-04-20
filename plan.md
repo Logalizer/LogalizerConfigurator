@@ -135,7 +135,8 @@ React Material > webpack
 - [x] since many translations are there not able to differentiate when the next one starts
 - [x] UI shall allow shrinking translations
 - [x] Feature: Different views for seeing translations
-- [ ] Find best way to add help in each section
+- [x] Find best way to add help in each section
+- [x] Find best way to add translation help
 - [x] Confirmation before translation delete
 - [ ] Feature: UI shall allow reordering
   - [ ] Drag drop with <https://dndkit.com/>  
