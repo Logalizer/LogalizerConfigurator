@@ -126,26 +126,41 @@ function Item({ Index, Text1, Text2, EditAction, DeleteAction }) {
   if (isEditing) {
     ItemContent = (
       <>
-        <Grid xs={6}> {editInput1}</Grid>
-        <Grid xs={5}> {editInput2}</Grid>
-        <Grid xs="auto"> {saveButton}</Grid>
+        <Grid xs={6} display="flex" alignItems="center">
+          {editInput1}
+        </Grid>
+        <Grid xs={5} display="flex" alignItems="center">
+          {" "}
+          {editInput2}
+        </Grid>
+        <Grid xs={1}>
+          <Stack direction="row">
+            {saveButton}
+            {deleteButton}
+          </Stack>
+        </Grid>
       </>
     );
   } else {
     ItemContent = (
       <>
-        <Grid xs={6}> {Text1}</Grid>
-        <Grid xs={5}> {Text2}</Grid>
-        <Grid xs="auto"> {editButton}</Grid>
+        <Grid xs={6} display="flex" alignItems="center">
+          {Text1}
+        </Grid>
+        <Grid xs={5} display="flex" alignItems="center">
+          {" "}
+          {Text2}
+        </Grid>
+        <Grid xs={1}>
+          <Stack direction="row">
+            {editButton}
+            {deleteButton}
+          </Stack>
+        </Grid>
       </>
     );
   }
-  return (
-    <>
-      {ItemContent}
-      <Grid xs="auto"> {deleteButton}</Grid>
-    </>
-  );
+  return <>{ItemContent}</>;
 }
 // Bug: Some times add is not working
 // Bug: When a big text is added then the column width gets adjusted
@@ -192,14 +207,16 @@ export default function PairArrayProvider({
   let items = [];
   Data.forEach((text, i) => {
     items.push(
-      <Item
-        key={i + text[0] + text[1]}
-        Index={i}
-        Text1={text[0]}
-        Text2={text[1]}
-        EditAction={EditAction}
-        DeleteAction={DeleteAction}
-      />
+      <Grid xs={12} container>
+        <Item
+          key={i + text[0] + text[1]}
+          Index={i}
+          Text1={text[0]}
+          Text2={text[1]}
+          EditAction={EditAction}
+          DeleteAction={DeleteAction}
+        />
+      </Grid>
     );
   });
   return (
@@ -210,16 +227,18 @@ export default function PairArrayProvider({
         TitlePair={TitlePair}
       />
 
-      <Grid container>
-        <Grid xs={6}>
-          <b>{TitlePair[0]}</b>
+      <Grid container spacing={1}>
+        <Grid xs={12} container>
+          <Grid xs={6}>
+            <b>{TitlePair[0]}</b>
+          </Grid>
+          <Grid xs={5}>
+            <b>{TitlePair[1]}</b>
+          </Grid>
+          <Grid xs="auto"></Grid>
+          <Grid xs="auto"></Grid>
+          {items}
         </Grid>
-        <Grid xs={5}>
-          <b>{TitlePair[1]}</b>
-        </Grid>
-        <Grid xs="auto"></Grid>
-        <Grid xs="auto"></Grid>
-        {items}
       </Grid>
     </>
   );

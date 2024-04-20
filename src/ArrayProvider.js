@@ -13,6 +13,8 @@ import { useConfigDispatch } from "./ConfigContext.js";
 import Paper from "@mui/material/Paper";
 
 import React from "react";
+import { Save } from "@mui/icons-material";
+import Grid from "@mui/material/Unstable_Grid2";
 
 function AddItem({ ItemName, AddAction }) {
   // const [text, setText] = useState("");
@@ -20,7 +22,7 @@ function AddItem({ ItemName, AddAction }) {
   const dispatch = useConfigDispatch();
   const placeholder = "Add " + ItemName;
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack direction="row" spacing={2} sx={{ pr: 2 }}>
       <TextField
         id="outlined-basic"
         fullWidth
@@ -48,48 +50,73 @@ function Item({ Index, Text, EditAction, DeleteAction }) {
   let ItemContent;
   let text;
   const textInput = React.createRef();
+
+  const SaveButton = (
+    <IconButton aria-label="save">
+      <SaveIcon
+        onClick={(e) => {
+          if (textInput.current.value.length === 0) return;
+          dispatch(EditAction(Index, textInput.current.value));
+          setIsEditing(false);
+        }}
+      />
+    </IconButton>
+  );
+
+  const EditTextField = (
+    <TextField
+      id="outlined-basic"
+      defaultValue={Text}
+      inputRef={textInput}
+      size="small"
+    />
+  );
+
+  const EditButton = (
+    <IconButton aria-label="edit">
+      <EditIcon onClick={() => setIsEditing(true)} />
+    </IconButton>
+  );
+
+  const DeleteButon = (
+    <IconButton aria-label="delete">
+      <DeleteIcon
+        onClick={(e) => {
+          dispatch(DeleteAction(Index));
+        }}
+      />
+    </IconButton>
+  );
   if (isEditing) {
     ItemContent = (
       <>
-        <IconButton aria-label="save">
-          <SaveIcon
-            onClick={(e) => {
-              if (textInput.current.value.length === 0) return;
-              dispatch(EditAction(Index, textInput.current.value));
-              setIsEditing(false);
-            }}
-          />
-        </IconButton>
-        <TextField
-          id="outlined-basic"
-          defaultValue={Text}
-          inputRef={textInput}
-          size="small"
-        />
+        <Grid xs display="flex" alignItems="center">
+          {EditTextField}
+        </Grid>
+        <Grid xs="auto">
+          <Stack direction="row">
+            {SaveButton}
+            {DeleteButon}
+          </Stack>
+        </Grid>
       </>
     );
   } else {
     ItemContent = (
       <>
-        <IconButton aria-label="edit">
-          <EditIcon onClick={() => setIsEditing(true)} />
-        </IconButton>
-        {Text}
+        <Grid xs display="flex" alignItems="center">
+          {Text}
+        </Grid>
+        <Grid xs="auto">
+          <Stack direction="row">
+            {EditButton}
+            {DeleteButon}
+          </Stack>
+        </Grid>
       </>
     );
   }
-  return (
-    <>
-      <IconButton aria-label="delete">
-        <DeleteIcon
-          onClick={(e) => {
-            dispatch(DeleteAction(Index));
-          }}
-        />
-      </IconButton>
-      {ItemContent}
-    </>
-  );
+  return <>{ItemContent}</>;
 }
 
 export default function ArrayProvider({
@@ -132,18 +159,18 @@ export default function ArrayProvider({
     <>
       <AddItem ItemName={ItemName} AddAction={AddAction} />
 
-      <Stack direction="column">
+      <Grid container spacing={1}>
         {Data.map((text, i) => (
-          <div key={i}>
+          <Grid xs={12} container>
             <Item
               Index={i}
               Text={text}
               EditAction={EditAction}
               DeleteAction={DeleteAction}
             />
-          </div>
+          </Grid>
         ))}
-      </Stack>
+      </Grid>
     </>
   );
 }
