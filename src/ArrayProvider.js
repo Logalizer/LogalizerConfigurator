@@ -155,11 +155,10 @@ export default function ArrayProvider({
       };
     };
   }
-  return (
-    <>
-      <AddItem ItemName={ItemName} AddAction={AddAction} />
-
-      <Grid container spacing={1}>
+  function DataSection() {
+    if (Data.length == 0) return <></>;
+    return (
+      <Grid container spacing={0} sx={{ p: 2 }}>
         {Data.map((text, i) => (
           <Grid xs={12} container>
             <Item
@@ -171,6 +170,13 @@ export default function ArrayProvider({
           </Grid>
         ))}
       </Grid>
+    );
+  }
+  return (
+    <>
+      <AddItem ItemName={ItemName} AddAction={AddAction} />
+
+      <DataSection />
     </>
   );
 }

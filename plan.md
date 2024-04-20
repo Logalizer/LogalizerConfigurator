@@ -141,5 +141,5 @@ React Material > webpack
 - [ ] Feature: UI shall allow reordering
   - [ ] Drag drop with <https://dndkit.com/>  
 - [ ] Bug: Show alert in a modern format with close button
-- [ ] Edit button on array provider is opening an input field, make it modern
+- [x] Edit button on array provider is opening an input field, make it modern
 - [ ] Add filter by group and translation print option to translations pane

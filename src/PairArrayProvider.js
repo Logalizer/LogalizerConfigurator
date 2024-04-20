@@ -219,6 +219,25 @@ export default function PairArrayProvider({
       </Grid>
     );
   });
+
+  function DataSection() {
+    if (items.length == 0) return <></>;
+    return (
+      <Grid container spacing={0} sx={{ p: 2 }}>
+        <Grid xs={12} container>
+          <Grid xs={6}>
+            <b>{TitlePair[0]}</b>
+          </Grid>
+          <Grid xs={6}>
+            <b>{TitlePair[1]}</b>
+          </Grid>
+          <Grid xs="auto"></Grid>
+          {items}
+        </Grid>
+      </Grid>
+    );
+  }
+
   return (
     <>
       <AddItem
@@ -226,20 +245,7 @@ export default function PairArrayProvider({
         AddAction={AddAction}
         TitlePair={TitlePair}
       />
-
-      <Grid container spacing={1}>
-        <Grid xs={12} container>
-          <Grid xs={6}>
-            <b>{TitlePair[0]}</b>
-          </Grid>
-          <Grid xs={5}>
-            <b>{TitlePair[1]}</b>
-          </Grid>
-          <Grid xs="auto"></Grid>
-          <Grid xs="auto"></Grid>
-          {items}
-        </Grid>
-      </Grid>
+      <DataSection />
     </>
   );
 }
