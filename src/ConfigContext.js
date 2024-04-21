@@ -2,6 +2,7 @@ import { createContext, useContext, useReducer } from "react";
 import { useImmerReducer } from "use-immer";
 const ConfigContext = createContext(null);
 import { nanoid } from "nanoid";
+import { arrayMove } from "@dnd-kit/sortable";
 const ConfigDispatchContext = createContext(null);
 
 export function ConfigProvider({ children }) {
@@ -57,6 +58,14 @@ function ConfigReducer(Config, action) {
       Config.blacklist.splice(action.index, 1);
       return;
     }
+    case "dragged_blacklist": {
+      Config.blacklist = arrayMove(
+        Config.blacklist,
+        action.activeindex,
+        action.overIndex
+      );
+      return;
+    }
 
     // execute
     case "added_execute": {
@@ -69,6 +78,14 @@ function ConfigReducer(Config, action) {
     }
     case "deleted_execute": {
       Config.execute.splice(action.index, 1);
+      return;
+    }
+    case "dragged_execute": {
+      Config.execute = arrayMove(
+        Config.execute,
+        action.activeindex,
+        action.overIndex
+      );
       return;
     }
 
@@ -85,6 +102,14 @@ function ConfigReducer(Config, action) {
       Config.delete_lines.splice(action.index, 1);
       return;
     }
+    case "dragged_delete_lines": {
+      Config.delete_lines = arrayMove(
+        Config.delete_lines,
+        action.activeindex,
+        action.overIndex
+      );
+      return;
+    }
 
     // disable_group
     case "added_disable_group": {
@@ -97,6 +122,14 @@ function ConfigReducer(Config, action) {
     }
     case "deleted_disable_group": {
       Config.disable_group.splice(action.index, 1);
+      return;
+    }
+    case "dragged_disable_group": {
+      Config.disable_group = arrayMove(
+        Config.disable_group,
+        action.activeindex,
+        action.overIndex
+      );
       return;
     }
 
@@ -113,6 +146,14 @@ function ConfigReducer(Config, action) {
       Config.wrap_text_pre.splice(action.index, 1);
       return;
     }
+    case "dragged_wrap_text_pre": {
+      Config.wrap_text_pre = arrayMove(
+        Config.wrap_text_pre,
+        action.activeindex,
+        action.overIndex
+      );
+      return;
+    }
 
     // wrap_text_post
     case "added_wrap_text_post": {
@@ -125,6 +166,14 @@ function ConfigReducer(Config, action) {
     }
     case "deleted_wrap_text_post": {
       Config.wrap_text_post.splice(action.index, 1);
+      return;
+    }
+    case "dragged_wrap_text_post": {
+      Config.wrap_text_post = arrayMove(
+        Config.wrap_text_post,
+        action.activeindex,
+        action.overIndex
+      );
       return;
     }
 
@@ -187,6 +236,14 @@ function ConfigReducer(Config, action) {
       Config.translations[action.tr_index].patterns.splice(action.index, 1);
       return;
     }
+    case "dragged_patterns": {
+      Config.translations[action.tr_index].patterns = arrayMove(
+        Config.translations[action.tr_index].patterns,
+        action.activeindex,
+        action.overIndex
+      );
+      return;
+    }
     // enabled
     case "changed_tr_enabled": {
       Config.translations[action.tr_index].enabled = action.value;
@@ -223,6 +280,14 @@ function ConfigReducer(Config, action) {
     }
     case "deleted_translation": {
       Config.translations.splice(action.index, 1);
+      return;
+    }
+    case "dragged_translation": {
+      Config.translations = arrayMove(
+        Config.translations,
+        action.activeindex,
+        action.overIndex
+      );
       return;
     }
     // json
