@@ -12,6 +12,9 @@ import { useState } from "react";
 import { useConfigDispatch } from "./ConfigContext.js";
 import Paper from "@mui/material/Paper";
 
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+
 import React from "react";
 import { Save } from "@mui/icons-material";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -24,6 +27,32 @@ import {
 } from "@dnd-kit/sortable";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
+function ContentBox(props) {
+  const { sx, ...other } = props;
+  return (
+    <Box
+      sx={{
+        fontSize: "0.875rem",
+        ...sx,
+      }}
+      {...other}
+    />
+  );
+}
+
+ContentBox.propTypes = {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])
+    ),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+};
 
 function AddItem({ ItemName, AddAction }) {
   // const [text, setText] = useState("");
@@ -101,61 +130,74 @@ function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
     </IconButton>
   );
 
-  const DeleteButon = (
-    <IconButton aria-label="delete">
-      <DeleteIcon
-        onClick={(e) => {
-          dispatch(DeleteAction(Index));
-        }}
-      />
-    </IconButton>
-  );
+  function DeleteButon({ Index }) {
+    return (
+      <IconButton aria-label="delete">
+        <DeleteIcon
+          onClick={(e) => {
+            console.log("Delete");
+            dispatch(DeleteAction(Index));
+          }}
+        />
+      </IconButton>
+    );
+  }
+
   if (isEditing) {
     ItemContent = (
       <>
-        <Grid
-          xs
-          display="flex"
-          alignItems="center"
-          ref={setNodeRef}
-          style={style}
-          {...attributes}
-          {...listeners}
-        >
-          {EditTextField}
-        </Grid>
-        <Grid xs="auto">
+        <ContentBox sx={{ flexGrow: 1 }}>{EditTextField}</ContentBox>
+        <ContentBox>
           <Stack direction="row">
             {SaveButton}
-            {DeleteButon}
+            <IconButton aria-label="delete">
+              <DeleteIcon
+                onClick={(e) => {
+                  console.log("Delete");
+                  dispatch(DeleteAction(Index));
+                }}
+              />
+            </IconButton>
           </Stack>
-        </Grid>
+        </ContentBox>
       </>
     );
   } else {
     ItemContent = (
       <>
-        <Grid
-          xs
-          display="flex"
-          alignItems="center"
-          ref={setNodeRef}
-          style={style}
-          {...attributes}
-          {...listeners}
-        >
-          {Text}
-        </Grid>
-        <Grid xs="auto">
+        <ContentBox sx={{ flexGrow: 1 }}>{Text}</ContentBox>
+        <ContentBox>
           <Stack direction="row">
             {EditButton}
-            {DeleteButon}
+            <IconButton aria-label="delete">
+              <DeleteIcon
+                onClick={(e) => {
+                  console.log("Delete");
+                  dispatch(DeleteAction(Index));
+                }}
+              />
+            </IconButton>
           </Stack>
-        </Grid>
+        </ContentBox>
       </>
     );
   }
-  return <>{ItemContent}</>;
+  return (
+    <Box
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      sx={{
+        display: "flex",
+        bgcolor: "background.paper",
+        borderRadius: 1,
+        alignItems: "center",
+      }}
+    >
+      {ItemContent}
+    </Box>
+  );
 }
 
 export default function ArrayProvider({
@@ -200,7 +242,6 @@ export default function ArrayProvider({
   }
   if (DragAction === null) {
     DragAction = (activeIndex, overIndex) => {
-      console.log("Test");
       return {
         type: drag_type,
         activeIndex: activeIndex,
@@ -211,14 +252,20 @@ export default function ArrayProvider({
   function DataSection() {
     if (Data.length == 0) return <></>;
     return (
-      <Grid container spacing={0} sx={{ p: 2 }}>
+      <div
+        style={{
+          width: "100%",
+          "padding-left": "20px",
+          "padding-right": "15px",
+        }}
+      >
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={Data} strategy={verticalListSortingStrategy}>
-            {Data.map((text, i) => (
-              <Grid xs={12} container>
+            <>
+              {Data.map((text, i) => (
                 <Item
                   Index={i}
                   key={text}
@@ -227,11 +274,11 @@ export default function ArrayProvider({
                   EditAction={EditAction}
                   DeleteAction={DeleteAction}
                 />
-              </Grid>
-            ))}
+              ))}
+            </>
           </SortableContext>
         </DndContext>
-      </Grid>
+      </div>
     );
   }
   return (

@@ -61,7 +61,7 @@ function ConfigReducer(Config, action) {
     case "dragged_blacklist": {
       Config.blacklist = arrayMove(
         Config.blacklist,
-        action.activeindex,
+        action.activeIndex,
         action.overIndex
       );
       return;
@@ -83,7 +83,7 @@ function ConfigReducer(Config, action) {
     case "dragged_execute": {
       Config.execute = arrayMove(
         Config.execute,
-        action.activeindex,
+        action.activeIndex,
         action.overIndex
       );
       return;
@@ -105,7 +105,7 @@ function ConfigReducer(Config, action) {
     case "dragged_delete_lines": {
       Config.delete_lines = arrayMove(
         Config.delete_lines,
-        action.activeindex,
+        action.activeIndex,
         action.overIndex
       );
       return;
@@ -127,7 +127,7 @@ function ConfigReducer(Config, action) {
     case "dragged_disable_group": {
       Config.disable_group = arrayMove(
         Config.disable_group,
-        action.activeindex,
+        action.activeIndex,
         action.overIndex
       );
       return;
@@ -149,7 +149,7 @@ function ConfigReducer(Config, action) {
     case "dragged_wrap_text_pre": {
       Config.wrap_text_pre = arrayMove(
         Config.wrap_text_pre,
-        action.activeindex,
+        action.activeIndex,
         action.overIndex
       );
       return;
@@ -171,7 +171,7 @@ function ConfigReducer(Config, action) {
     case "dragged_wrap_text_post": {
       Config.wrap_text_post = arrayMove(
         Config.wrap_text_post,
-        action.activeindex,
+        action.activeIndex,
         action.overIndex
       );
       return;
@@ -239,7 +239,7 @@ function ConfigReducer(Config, action) {
     case "dragged_patterns": {
       Config.translations[action.tr_index].patterns = arrayMove(
         Config.translations[action.tr_index].patterns,
-        action.activeindex,
+        action.activeIndex,
         action.overIndex
       );
       return;
@@ -285,7 +285,7 @@ function ConfigReducer(Config, action) {
     case "dragged_translation": {
       Config.translations = arrayMove(
         Config.translations,
-        action.activeindex,
+        action.activeIndex,
         action.overIndex
       );
       return;
