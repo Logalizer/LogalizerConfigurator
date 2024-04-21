@@ -16,6 +16,15 @@ import React from "react";
 import { Save } from "@mui/icons-material";
 import Grid from "@mui/material/Unstable_Grid2";
 
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 function AddItem({ ItemName, AddAction }) {
   // const [text, setText] = useState("");
   const textInput = React.createRef();
@@ -30,6 +39,13 @@ function AddItem({ ItemName, AddAction }) {
         label={placeholder}
         variant="outlined"
         size="small"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            if (textInput.current.value.length === 0) return;
+            dispatch(AddAction(textInput.current.value));
+            textInput.current.value = "";
+          }
+        }}
       />
       <IconButton aria-label="add">
         <AddIcon
@@ -44,12 +60,19 @@ function AddItem({ ItemName, AddAction }) {
   );
 }
 
-function Item({ Index, Text, EditAction, DeleteAction }) {
+function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useConfigDispatch();
   let ItemContent;
   let text;
   const textInput = React.createRef();
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const SaveButton = (
     <IconButton aria-label="save">
@@ -90,7 +113,15 @@ function Item({ Index, Text, EditAction, DeleteAction }) {
   if (isEditing) {
     ItemContent = (
       <>
-        <Grid xs display="flex" alignItems="center">
+        <Grid
+          xs
+          display="flex"
+          alignItems="center"
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+        >
           {EditTextField}
         </Grid>
         <Grid xs="auto">
@@ -104,7 +135,15 @@ function Item({ Index, Text, EditAction, DeleteAction }) {
   } else {
     ItemContent = (
       <>
-        <Grid xs display="flex" alignItems="center">
+        <Grid
+          xs
+          display="flex"
+          alignItems="center"
+          ref={setNodeRef}
+          style={style}
+          {...attributes}
+          {...listeners}
+        >
           {Text}
         </Grid>
         <Grid xs="auto">
@@ -126,10 +165,14 @@ export default function ArrayProvider({
   AddAction = null,
   EditAction = null,
   DeleteAction = null,
+  DragAction = null,
 }) {
+  const dispatch = useConfigDispatch();
   const add_type = "added_" + ActionPostfix;
   const edit_type = "edited_" + ActionPostfix;
   const delete_type = "deleted_" + ActionPostfix;
+  const drag_type = "dragged_" + ActionPostfix;
+
   if (AddAction === null) {
     AddAction = (text) => {
       return {
@@ -155,20 +198,39 @@ export default function ArrayProvider({
       };
     };
   }
+  if (DragAction === null) {
+    DragAction = (activeIndex, overIndex) => {
+      console.log("Test");
+      return {
+        type: drag_type,
+        activeIndex: activeIndex,
+        overIndex: overIndex,
+      };
+    };
+  }
   function DataSection() {
     if (Data.length == 0) return <></>;
     return (
       <Grid container spacing={0} sx={{ p: 2 }}>
-        {Data.map((text, i) => (
-          <Grid xs={12} container>
-            <Item
-              Index={i}
-              Text={text}
-              EditAction={EditAction}
-              DeleteAction={DeleteAction}
-            />
-          </Grid>
-        ))}
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={Data} strategy={verticalListSortingStrategy}>
+            {Data.map((text, i) => (
+              <Grid xs={12} container>
+                <Item
+                  Index={i}
+                  key={text}
+                  id={text}
+                  Text={text}
+                  EditAction={EditAction}
+                  DeleteAction={DeleteAction}
+                />
+              </Grid>
+            ))}
+          </SortableContext>
+        </DndContext>
       </Grid>
     );
   }
@@ -179,4 +241,14 @@ export default function ArrayProvider({
       <DataSection />
     </>
   );
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const activeIndex = Data.indexOf(active.id);
+      const overIndex = Data.indexOf(over.id);
+
+      dispatch(DragAction(activeIndex, overIndex));
+    }
+  }
 }
