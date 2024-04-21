@@ -18,7 +18,8 @@ import Box from "@mui/material/Box";
 import React from "react";
 import { Save } from "@mui/icons-material";
 import Grid from "@mui/material/Unstable_Grid2";
-
+import DragHandleIcon from "@mui/icons-material/DragHandle";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -130,18 +131,16 @@ function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
     </IconButton>
   );
 
-  function DeleteButon({ Index }) {
-    return (
-      <IconButton aria-label="delete">
-        <DeleteIcon
-          onClick={(e) => {
-            console.log("Delete");
-            dispatch(DeleteAction(Index));
-          }}
-        />
-      </IconButton>
-    );
-  }
+  const DeleteButton = (
+    <IconButton aria-label="delete">
+      <DeleteIcon
+        onClick={(e) => {
+          console.log("Delete");
+          dispatch(DeleteAction(Index));
+        }}
+      />
+    </IconButton>
+  );
 
   if (isEditing) {
     ItemContent = (
@@ -150,14 +149,7 @@ function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
         <ContentBox>
           <Stack direction="row">
             {SaveButton}
-            <IconButton aria-label="delete">
-              <DeleteIcon
-                onClick={(e) => {
-                  console.log("Delete");
-                  dispatch(DeleteAction(Index));
-                }}
-              />
-            </IconButton>
+            {DeleteButton}
           </Stack>
         </ContentBox>
       </>
@@ -169,14 +161,7 @@ function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
         <ContentBox>
           <Stack direction="row">
             {EditButton}
-            <IconButton aria-label="delete">
-              <DeleteIcon
-                onClick={(e) => {
-                  console.log("Delete");
-                  dispatch(DeleteAction(Index));
-                }}
-              />
-            </IconButton>
+            {DeleteButton}
           </Stack>
         </ContentBox>
       </>
@@ -186,8 +171,6 @@ function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
     <Box
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       sx={{
         display: "flex",
         bgcolor: "background.paper",
@@ -196,6 +179,9 @@ function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
       }}
     >
       {ItemContent}
+      <div className="dragHandle" {...attributes} {...listeners}>
+        <DragIndicatorIcon />
+      </div>
     </Box>
   );
 }
