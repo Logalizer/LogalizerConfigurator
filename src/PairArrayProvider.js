@@ -3,7 +3,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useConfigDispatch } from "./ConfigContext.js";
-import React from "react";
 import { Stack } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -20,6 +19,45 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
 import Grid from "@mui/material/Unstable_Grid2";
+
+import React from "react";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Title } from "@mui/icons-material";
+
+function ContentBox(props) {
+  const { sx, ...other } = props;
+  return (
+    <Box
+      sx={{
+        fontSize: "0.875rem",
+        ...sx,
+      }}
+      {...other}
+    />
+  );
+}
+
+ContentBox.propTypes = {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])
+    ),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+};
 
 function AddItem({ ItemName, AddAction, TitlePair }) {
   const text1Input = React.createRef();
@@ -67,12 +105,20 @@ function AddItem({ ItemName, AddAction, TitlePair }) {
   );
 }
 
-function Item({ Index, Text1, Text2, EditAction, DeleteAction }) {
+function Item({ Index, Text1, Text2, id, key, EditAction, DeleteAction }) {
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useConfigDispatch();
   let ItemContent;
   const textInput1 = React.createRef();
   const textInput2 = React.createRef();
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   const editInput1 = (
     <TextField
       id="outlined-basic"
@@ -123,44 +169,55 @@ function Item({ Index, Text1, Text2, EditAction, DeleteAction }) {
       />
     </IconButton>
   );
+
   if (isEditing) {
     ItemContent = (
       <>
-        <Grid xs={6} display="flex" alignItems="center">
-          {editInput1}
-        </Grid>
-        <Grid xs={5} display="flex" alignItems="center">
-          {" "}
-          {editInput2}
-        </Grid>
-        <Grid xs={1}>
+        {" "}
+        <ContentBox sx={{ flexGrow: 1 }}>{editInput1}</ContentBox>
+        <ContentBox sx={{ flexGrow: 1 }}>{editInput2}</ContentBox>
+        <ContentBox>
           <Stack direction="row">
             {saveButton}
             {deleteButton}
           </Stack>
-        </Grid>
+        </ContentBox>
       </>
     );
   } else {
     ItemContent = (
       <>
-        <Grid xs={6} display="flex" alignItems="center">
-          {Text1}
-        </Grid>
-        <Grid xs={5} display="flex" alignItems="center">
-          {" "}
-          {Text2}
-        </Grid>
-        <Grid xs={1}>
+        <ContentBox sx={{ flexGrow: 1 }}>{Text1}</ContentBox>
+        <ContentBox sx={{ flexGrow: 1 }}>{Text2}</ContentBox>
+
+        <ContentBox>
           <Stack direction="row">
             {editButton}
             {deleteButton}
           </Stack>
-        </Grid>
+        </ContentBox>
       </>
     );
   }
-  return <>{ItemContent}</>;
+  return (
+    <>
+      <Box
+        ref={setNodeRef}
+        style={style}
+        sx={{
+          display: "flex",
+          bgcolor: "background.paper",
+          borderRadius: 1,
+          alignItems: "center",
+        }}
+      >
+        {ItemContent}
+        <div className="dragHandle" {...attributes} {...listeners}>
+          <DragIndicatorIcon />
+        </div>
+      </Box>
+    </>
+  );
 }
 // Bug: Some times add is not working
 // Bug: When a big text is added then the column width gets adjusted
@@ -172,10 +229,14 @@ export default function PairArrayProvider({
   AddAction = null,
   EditAction = null,
   DeleteAction = null,
+  DragAction = null,
 }) {
+  const dispatch = useConfigDispatch();
   const add_type = "added_" + ActionPostfix;
   const edit_type = "edited_" + ActionPostfix;
   const delete_type = "deleted_" + ActionPostfix;
+  const drag_type = "dragged_" + ActionPostfix;
+
   if (AddAction === null) {
     AddAction = (text1, text2) => {
       return {
@@ -204,37 +265,75 @@ export default function PairArrayProvider({
       };
     };
   }
+  if (DragAction === null) {
+    DragAction = (activeIndex, overIndex) => {
+      return {
+        type: drag_type,
+        activeIndex: activeIndex,
+        overIndex: overIndex,
+      };
+    };
+  }
+
   let items = [];
   Data.forEach((text, i) => {
     items.push(
-      <Grid xs={12} container>
-        <Item
-          key={i + text[0] + text[1]}
-          Index={i}
-          Text1={text[0]}
-          Text2={text[1]}
-          EditAction={EditAction}
-          DeleteAction={DeleteAction}
-        />
-      </Grid>
+      <Item
+        key={i + text[0] + text[1]}
+        id={i + text[0] + text[1]}
+        Index={i}
+        Text1={text[0]}
+        Text2={text[1]}
+        EditAction={EditAction}
+        DeleteAction={DeleteAction}
+      />
     );
+  });
+  let sortData = [];
+  Data.forEach((text, i) => {
+    sortData.push(i + text[0] + text[1]);
   });
 
   function DataSection() {
     if (items.length == 0) return <></>;
     return (
-      <Grid container spacing={0} sx={{ p: 2 }}>
-        <Grid xs={12} container>
-          <Grid xs={6}>
+      <div
+        style={{
+          width: "100%",
+          "padding-left": "20px",
+          "padding-right": "15px",
+          "margin-top": "5px",
+        }}
+      >
+        {" "}
+        <Box
+          sx={{
+            display: "flex",
+            bgcolor: "background.paper",
+            borderRadius: 1,
+            alignItems: "center",
+            paddingRight: 13,
+          }}
+        >
+          <ContentBox sx={{ flexGrow: 1 }}>
             <b>{TitlePair[0]}</b>
-          </Grid>
-          <Grid xs={6}>
+          </ContentBox>
+          <ContentBox sx={{ flexGrow: 1 }}>
             <b>{TitlePair[1]}</b>
-          </Grid>
-          <Grid xs="auto"></Grid>
-          {items}
-        </Grid>
-      </Grid>
+          </ContentBox>
+        </Box>
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={sortData}
+            strategy={verticalListSortingStrategy}
+          >
+            <>{items}</>
+          </SortableContext>
+        </DndContext>
+      </div>
     );
   }
 
@@ -248,18 +347,13 @@ export default function PairArrayProvider({
       <DataSection />
     </>
   );
-}
+  function handleDragEnd(event) {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      const activeIndex = sortData.indexOf(active.id);
+      const overIndex = sortData.indexOf(over.id);
 
-// {
-//   DataParser(Data).map((text, i) => (
-//     <li key={i}>
-//       <Item
-//         Index={i}
-//         Text1={text.first}
-//         Text2={text.second}
-//         EditAction={EditAction}
-//         DeleteAction={DeleteAction}
-//       />
-//     </li>
-//   ))
-// }
+      dispatch(DragAction(activeIndex, overIndex));
+    }
+  }
+}

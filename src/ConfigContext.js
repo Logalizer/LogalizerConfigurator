@@ -194,6 +194,14 @@ function ConfigReducer(Config, action) {
 
       return;
     }
+    case "dragged_replace_words": {
+      Config.replace_words = arrayMove(
+        Config.replace_words,
+        action.activeIndex,
+        action.overIndex
+      );
+      return;
+    }
     case "deleted_replace_words": {
       delete Config.replace_words[action.value1];
       return;

@@ -1,5 +1,3 @@
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 
 import Stack from "@mui/material/Stack";
@@ -10,19 +8,14 @@ import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import { useConfigDispatch } from "./ConfigContext.js";
-import Paper from "@mui/material/Paper";
 
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 
 import React from "react";
-import { Save } from "@mui/icons-material";
-import Grid from "@mui/material/Unstable_Grid2";
-import DragHandleIcon from "@mui/icons-material/DragHandle";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -94,7 +87,6 @@ function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useConfigDispatch();
   let ItemContent;
-  let text;
   const textInput = React.createRef();
 
   const { attributes, listeners, setNodeRef, transform, transition } =
