@@ -183,23 +183,29 @@ function ConfigReducer(Config, action) {
       return;
     }
     case "edited_replace_words": {
-      // bug: if action.value1 changes, then a new entry is created instead of editing
-      //Config.replace_words[action.value1] = action.value2;
-      // fix
       const keys = Object.keys(Config.replace_words);
-      const oldentry = keys[action.index];
-      delete Config.replace_words[oldentry];
-      // order changes as it is re-entered
-      Config.replace_words[action.value1] = action.value2;
+      const values = Object.values(Config.replace_words);
+      keys[action.index] = action.value1;
+      values[action.index] = action.value2;
+      var newObj = {};
+      keys.forEach((key, i) => {
+        newObj[key] = values[i];
+      });
+      Config.replace_words = newObj;
 
       return;
     }
     case "dragged_replace_words": {
-      Config.replace_words = arrayMove(
-        Config.replace_words,
-        action.activeIndex,
-        action.overIndex
-      );
+      let keys = Object.keys(Config.replace_words);
+      let values = Object.values(Config.replace_words);
+      keys = arrayMove(keys, action.activeIndex, action.overIndex);
+      values = arrayMove(values, action.activeIndex, action.overIndex);
+      var newObj = {};
+      keys.forEach((key, i) => {
+        newObj[key] = values[i];
+      });
+      Config.replace_words = newObj;
+
       return;
     }
     case "deleted_replace_words": {

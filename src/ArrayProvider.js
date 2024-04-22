@@ -127,7 +127,6 @@ function Item({ Index, Text, id, key, EditAction, DeleteAction }) {
     <IconButton aria-label="delete">
       <DeleteIcon
         onClick={(e) => {
-          console.log("Delete");
           dispatch(DeleteAction(Index));
         }}
       />

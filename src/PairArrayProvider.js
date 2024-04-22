@@ -87,11 +87,6 @@ function AddItem({ ItemName, AddAction, TitlePair }) {
         <IconButton aria-label="add">
           <AddIcon
             onClick={() => {
-              console.log(
-                "ap",
-                text1Input.current.value,
-                text2Input.current.value
-              );
               dispatch(
                 AddAction(text1Input.current.value, text2Input.current.value)
               );

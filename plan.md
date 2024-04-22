@@ -144,9 +144,9 @@ React Material > webpack
 - [x] Edit button on array provider is opening an input field, make it modern
 - [ ] Add filter by group and translation print option to translations pane
 - [ ] Enable drag and drop for translations
-- [ ] Patterns and variables drag drop context update
-- [ ] PairArrayProvider formatting with box
-- [ ] PairArrayProvider drag and drop
+- [x] Patterns and variables drag drop context update
+- [x] PairArrayProvider formatting with box
+- [x] PairArrayProvider drag and drop
 - [ ] Make search and replace as a list
 - [ ] Add help for translations
 - [ ] Refactor

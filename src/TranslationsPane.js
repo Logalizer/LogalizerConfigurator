@@ -208,7 +208,6 @@ function Duplicates({ Index, Value }) {
       value={Value}
       inputValue={Value}
       onInputChange={(e, newInputValue) => {
-        console.log(newInputValue);
         dispatch({
           type: "changed_tr_duplicates",
           value: newInputValue,
