@@ -139,7 +139,15 @@ React Material > webpack
 - [x] Find best way to add translation help
 - [x] Confirmation before translation delete
 - [ ] Feature: UI shall allow reordering
-  - [ ] Drag drop with <https://dndkit.com/>  
+  - [x] Drag drop with <https://dndkit.com/>  
 - [ ] Bug: Show alert in a modern format with close button
 - [x] Edit button on array provider is opening an input field, make it modern
 - [ ] Add filter by group and translation print option to translations pane
+- [ ] Enable drag and drop for translations
+- [ ] Patterns and variables drag drop context update
+- [ ] PairArrayProvider formatting with box
+- [ ] PairArrayProvider drag and drop
+- [ ] Make search and replace as a list
+- [ ] Add help for translations
+- [ ] Refactor
+- [ ] Add a pane for pair configuration

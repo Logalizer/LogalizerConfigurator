@@ -274,6 +274,14 @@ function ConfigReducer(Config, action) {
       Config.translations[action.tr_index].variables.splice(action.index, 1);
       return;
     }
+    case "dragged_variables": {
+      Config.translations[action.tr_index].variables = arrayMove(
+        Config.translations[action.tr_index].variables,
+        action.activeIndex,
+        action.overIndex
+      );
+      return;
+    }
     case "added_translation": {
       Config.translations.push(initialConfig.translations[0]);
       return;

@@ -92,6 +92,15 @@ function Patterns({ TrIndex, Data }) {
       tr_index: TrIndex,
     };
   };
+  const DragAction = (activeIndex, overIndex) => {
+    return {
+      type: "dragged_patterns",
+      activeIndex: activeIndex,
+      overIndex: overIndex,
+      tr_index: TrIndex,
+    };
+  };
+
   return (
     <ArrayProvider
       ItemName="Patterns"
@@ -100,6 +109,7 @@ function Patterns({ TrIndex, Data }) {
       AddAction={AddAction}
       EditAction={EditAction}
       DeleteAction={DeleteAction}
+      DragAction={DragAction}
     />
   );
 }
@@ -133,6 +143,15 @@ function Variables({ TrIndex, Data }) {
       tr_index: TrIndex,
     };
   };
+  const DragAction = (activeIndex, overIndex) => {
+    return {
+      type: "dragged_variables",
+      activeIndex: activeIndex,
+      overIndex: overIndex,
+      tr_index: TrIndex,
+    };
+  };
+
   const variablesContent = (
     <PairArrayProvider
       ItemName={"Variables"}
@@ -142,6 +161,7 @@ function Variables({ TrIndex, Data }) {
       AddAction={AddAction}
       EditAction={EditAction}
       DeleteAction={DeleteAction}
+      DragAction={DragAction}
     />
   );
   return variablesContent;
