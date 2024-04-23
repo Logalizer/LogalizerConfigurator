@@ -142,12 +142,34 @@ React Material > webpack
   - [x] Drag drop with <https://dndkit.com/>  
 - [ ] Bug: Show alert in a modern format with close button
 - [x] Edit button on array provider is opening an input field, make it modern
-- [ ] Add filter by group and translation print option to translations pane
-- [ ] Enable drag and drop for translations
 - [x] Patterns and variables drag drop context update
 - [x] PairArrayProvider formatting with box
 - [x] PairArrayProvider drag and drop
-- [ ] Make search and replace as a list
+- [x] Make search and replace as a list
 - [ ] Add help for translations
-- [ ] Refactor
+- [ ] Add help for special variables
+- [ ] Add examples for translations - build a configuration with the user, show the end result
+- [ ] Add filter by group and translation print option to translations pane
 - [ ] Add a pane for pair configuration
+- [ ] Enable drag and drop for translations
+- [ ] Refactor
+
+## Translation Configuration Help
+
+1. Basic sequence
+2. Pattern matching
+3. Capturing variables
+4. Capturing multiple variables
+5. Placing variable values
+6. Variable capture at the ends
+7. disable
+8. disable a group
+9. blacklist a line
+10. Handling duplicates
+    1. Default handling
+    2. Removing all duplicate entries
+    3. Removing subsequent duplicate entries
+    4. Counting duplicates
+    5. Counting subsequent duplicate entries
+11. Auto new line
+12. Wrap text

@@ -13,6 +13,7 @@ import JsonPane from "./JsonPane";
 import MoreTranslationsPane from "./MoreTranslationsPane";
 import FiltersPane from "./FiltersPane";
 import PathsPane from "./PathsPane";
+import HelpPane from "./HelpPane";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -68,6 +69,7 @@ export default function TabBar() {
           <Tab label="File Modifiers" {...a11yProps(3)} />
           <Tab label="Paths" {...a11yProps(4)} />
           <Tab label="JSON" {...a11yProps(5)} />
+          <Tab label="Translations Help" {...a11yProps(5)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
@@ -87,6 +89,9 @@ export default function TabBar() {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={5}>
         <JsonPane />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={6}>
+        <HelpPane />
       </CustomTabPanel>
     </Box>
   );
