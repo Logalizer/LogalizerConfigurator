@@ -449,13 +449,11 @@ So it is as good as considering that the line was not present in the input.
 {
   translations: [
     {
-      group: "Greetings",
       print: "Alice -> Bob: Hello",
       patterns: ["Alice", "Bob", "said"]
       ]
     },
     {
-      group: "Greetings",
       print: "Jack -> Bob: Hello",
       patterns: ["Jack", "Bob"]
       ]
@@ -486,18 +484,218 @@ Alice -> Bob: Hello
 Jack -> Bob: Hello
 ~~~
 
+## 8. Handling duplicates
 
-`;
-const format = {
+In logs, it is typical to see multiple lines repeating. In some cases, it may mean something. In other cases it may just be a meaningless repetition. 
+
+Based on situtation we might have to configure differently.
+
+### 8.1. Removing All Duplicates
+
+Let's say we do not want to see any repetition.
+
+
+#### Configuration
+
+~~~json
+{
   translations: [
     {
-      group: "Group Name",
       print: "Alice -> Bob: Hello",
-      patterns: ["Hello Bob"],
-      variables: [],
+      patterns: ["Alice", "Bob"],
+      duplicates: "remove_all"
+      ]
     },
-  ],
-};
+    {
+      print: "Jack -> Bob: Hello",
+      patterns: ["Jack", "Bob"]
+      ]
+    }
+  ]
+}
+~~~
+
+By default duplicates are allowed. So \`duplicates: "allowed"\` is set by default. 
+
+#### Input
+
+~~~
+Alice saw Bob and said Hello
+Jack called Bob on his phone and said Hello
+Alice called Bob on his phone and said Hello
+Jack saw Bob and said Hello
+Alice called Bob on his phone and said Hello
+~~~
+
+#### Output
+
+~~~
+Alice -> Bob: Hello
+Jack -> Bob: Hello
+Jack -> Bob: Hello
+~~~
+
+Note that \`Alice -> Bob: Hello\`, occurs only once at the first occurrance, all the later occurances are duplicates and are removed. 
+
+If \`duplicates: "remove_all"\`, was not configured, then the output would look like this,
+
+~~~
+Alice -> Bob: Hello
+Jack -> Bob: Hello
+Alice -> Bob: Hello
+Jack -> Bob: Hello
+Alice -> Bob: Hello
+~~~
+
+
+### 8.2. Removing Continuous Duplicates
+
+Let's say we do not want to see any repetition that occurs back to back. 
+
+
+#### Configuration
+
+~~~json
+{
+  translations: [
+    {
+      print: "Alice -> Bob: Hello",
+      patterns: ["Alice", "Bob"],
+      duplicates: "remove_continuous"
+      ]
+    },
+    {
+      print: "Jack -> Bob: Hello",
+      patterns: ["Jack", "Bob"]
+      ]
+    }
+  ]
+}
+~~~
+
+#### Input
+
+~~~
+Alice saw Bob and said Hello
+Alice called Bob on his phone and said Hello
+Jack called Bob on his phone and said Hello
+Jack saw Bob and said Hello
+Alice called Bob on his phone and said Hello
+~~~
+
+#### Output
+
+~~~
+Alice -> Bob: Hello
+Jack -> Bob: Hello
+Jack -> Bob: Hello
+Alice -> Bob: Hello
+~~~
+
+Only back to back occurances of \`Alice -> Bob: Hello\` was removed.
+
+If \`duplicates: "remove_continuous"\`, was not configured, then the output would look like this,
+
+~~~
+Alice -> Bob: Hello
+Alice -> Bob: Hello
+Jack -> Bob: Hello
+Jack -> Bob: Hello
+Alice -> Bob: Hello
+~~~
+
+
+
+### 8.3. Counting Duplicates
+
+Let's say we want to count all the repetitions and print the count instead of repeating the prints. 
+
+
+#### Configuration
+
+~~~json
+{
+  translations: [
+    {
+      print: "Alice -> Bob: Hello (Occurrences: \${count} times)",
+      patterns: ["Alice", "Bob"],
+      duplicates: "count_all"
+      ]
+    },
+    {
+      print: "Jack -> Bob: Hello",
+      patterns: ["Jack", "Bob"]
+      ]
+    }
+  ]
+}
+~~~
+
+#### Input
+
+~~~
+Alice saw Bob and said Hello
+Alice called Bob on his phone and said Hello
+Jack called Bob on his phone and said Hello
+Jack saw Bob and said Hello
+Alice called Bob on his phone and said Hello
+~~~
+
+#### Output
+
+~~~
+Alice -> Bob: Hello (Occurrences: 3 times)
+Jack -> Bob: Hello
+Jack -> Bob: Hello
+~~~
+
+
+### 8.3. Counting Duplicates
+
+Let's say we want to count all the continuously occrring repetitions and print the count. 
+
+
+#### Configuration
+
+~~~json
+{
+  translations: [
+    {
+      print: "Alice -> Bob: Hello (Occurrences: \${count} times)",
+      patterns: ["Alice", "Bob"],
+      duplicates: "count_continuous"
+      ]
+    },
+    {
+      print: "Jack -> Bob: Hello",
+      patterns: ["Jack", "Bob"]
+      ]
+    }
+  ]
+}
+~~~
+
+#### Input
+
+~~~
+Alice saw Bob and said Hello
+Alice called Bob on his phone and said Hello
+Jack called Bob on his phone and said Hello
+Jack saw Bob and said Hello
+Alice called Bob on his phone and said Hello
+~~~
+
+#### Output
+
+~~~
+Alice -> Bob: Hello (Occurrences: 2 times)
+Jack -> Bob: Hello
+Jack -> Bob: Hello
+Alice -> Bob: Hello (Occurrences: 1 times)
+~~~
+
+
+`;
 
 export default function HelpPane() {
   return (
