@@ -74,6 +74,8 @@ Alice -> Bob: Hello
 
 Since the same pattern \`Hello Bob\` matches on couple of lines, the same output is printed twice.
 
+Consider another input where there is a problem with the output.
+
 #### Input
 
 ~~~
@@ -91,7 +93,7 @@ Alice -> Bob: Hello
 Alice -> Bob: Hello
 ~~~
 
-Here the third print is incorrect. It should have been \`Jack -> Bob: Hello\`. We will fix this in the next section. 
+Here the third print is incorrect. It should have been \`Jack -> Bob: Hello\`. We will fix this in the next section.
 
 ## 3. Multiple Patterns
 
@@ -186,7 +188,7 @@ Though this works, but it is not optimal and doesn't scale well. So we use varia
 }
 ~~~
 
-\${1} indicates the value of the variable that is captured. In our case we expect \${1} to contain Hi or Hello.
+Here the placeholder '\${1}' indicates the value of the variable that is captured. In our case we expect \${1} to contain Hi or Hello.
 
 To indicate that we want to capture Hi or Hello we must configure the position where the value comes.
 
@@ -215,9 +217,9 @@ Values are captured in \${1}, \${2}, \${3} and so on. You can capture multiple v
 
 Variables are configured based on their surronding starting and ending text.
 
-## 5. Automatic Variable Print
+### 4.1. Automatic Variable Print
 
-We can omit the \${1}. When we omit, the values are appended to the print in paranthesis. 
+We can omit the placeholder '\${1}'. When we omit, the values are appended to the print in paranthesis. 
 
 #### Configuration
 
@@ -253,9 +255,18 @@ Alice -> Bob: Says(Hello)
 Alice -> Bob: Says(Hi)
 ~~~
 
-## 5. Variables At The Ends
+### 4.2. Variables At The Beginings or Ends
 
-It might happen that the variables comes at the start or end of a line. 
+It might happen that the variables comes at the begining or end of a line.
+
+For the below input, lets say we want to capture the time and greeting message (Hello or Hi).
+Notice that the variables are not fully surrounded by start and end text, as it appear at the begining or end of the lines.
+
+~~~
+10:00 AM: Alice saw Bob and said Hello
+A few hours later
+2:00 PM: Alice called Bob on his phone and said Hi
+~~~
 
 #### Configuration
 
@@ -280,7 +291,6 @@ It might happen that the variables comes at the start or end of a line.
 }
 ~~~
 
-Did you notice that multiple variables are configured to be captured. 
 
 #### Input
 
@@ -303,9 +313,16 @@ If the variable comes at the begining of a line then you leave startswith as emp
 If the variable comes at the end of a line then you leave endswith as empty.
 
 
+You can configure to capture multiple variables. Did you notice that?
+
+### 4.3 Multiple Variables and No Placeholders
+
+Do you remember that we do not have to configure the placeholders like \${1}, \${2}?
+
+In this example we will configure multiple variables and omit placeholders. 
+
 #### Configuration 
 
-Do you remember that we do not have to configure the placeholders like \${1}, \${2}
 
 ~~~json
 {
@@ -344,8 +361,13 @@ Alice -> Bob: Says(10:00 AM, Hello)
 Alice -> Bob: Says(2:00 PM, Hi)
 ~~~
 
+You can see that the values are captured in paranthesis separated by comma.
 
-## 5. Disable a Translation
+## 5. Disable Translations
+
+There are different ways to disable translations.
+
+### 5.1. Disable Indivudual Translation
 
 As your configurations grow you might want to disable certain translation. 
 You can set enabled as false. The default value of enabled is true, so you don't have to set it explicitly. 
@@ -385,7 +407,7 @@ Jack -> Bob: Hello
 ~~~
 
 
-## 6. Disable a Group of Translations
+### 5.2. Disable a Group of Translations
 
 As your configurations grow you might want to disable a group of translations.  
 You are not interested in any greetings any more. This is when group comes in handy. 
@@ -437,11 +459,13 @@ Alice sends an important message to Bob
 Alice -> Bob: Important Message
 ~~~
 
-## 7. Blacklist 
+### 5.3. Selective Disable by Blacklist 
 
-You might want to selectively blacklist an input line so it is not considered for translation.
-If a input line is blacklisted, it will not be used for any translation.
-So it is as good as considering that the line was not present in the input.
+
+In somecases you might want to translate but ignore some variants of input lines.
+
+This is done by selectively blacklist an input line so it is not considered for translation.
+
 
 #### Configuration
 
@@ -456,14 +480,16 @@ So it is as good as considering that the line was not present in the input.
     {
       print: "Jack -> Bob: Hello",
       patterns: ["Jack", "Bob"]
-      ]
-    }
-  ],
-  blacklist: [
-    "Jack called Bob"
-  ]
+    ]
+  }
+],
+blacklist: [
+  "Jack called Bob"
+]
 }
 ~~~
+
+To configure a blacklist you specify the pattern, here in this case you want to ignore all lines containing "Jack called Bob".
 
 Note that blacklist is a list, so you can blacklist multiple input lines. 
 
@@ -484,13 +510,13 @@ Alice -> Bob: Hello
 Jack -> Bob: Hello
 ~~~
 
-## 8. Handling duplicates
+## 6. Handling duplicates
 
 In logs, it is typical to see multiple lines repeating. In some cases, it may mean something. In other cases it may just be a meaningless repetition. 
 
 Based on situtation we might have to configure differently.
 
-### 8.1. Removing All Duplicates
+### 6.1. Removing All Duplicates
 
 Let's say we do not want to see any repetition.
 
@@ -548,7 +574,7 @@ Alice -> Bob: Hello
 ~~~
 
 
-### 8.2. Removing Continuous Duplicates
+### 6.2. Removing Continuous Duplicates
 
 Let's say we do not want to see any repetition that occurs back to back. 
 
@@ -606,7 +632,7 @@ Alice -> Bob: Hello
 
 
 
-### 8.3. Counting Duplicates
+### 6.3. Counting Duplicates
 
 Let's say we want to count all the repetitions and print the count instead of repeating the prints. 
 
@@ -650,7 +676,7 @@ Jack -> Bob: Hello
 ~~~
 
 
-### 8.3. Counting Duplicates
+### 6.4. Counting Continuous Duplicates
 
 Let's say we want to count all the continuously occrring repetitions and print the count. 
 
